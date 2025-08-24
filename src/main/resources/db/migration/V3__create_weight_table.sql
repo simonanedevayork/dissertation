@@ -1,0 +1,31 @@
+CREATE TABLE WEIGHT
+(
+    WG_ID VARCHAR(16) CONSTRAINT NN_WEIGHT_ID NOT NULL,
+    WG_DOG_ID VARCHAR(16) CONSTRAINT NN_WEIGHT_DOG_ID NOT NULL,
+    WG_CURRENT NUMERIC(5,2) CONSTRAINT NN_CURRENT_WEIGHT NOT NULL,
+    WG_GOAL NUMERIC(5,2),
+    WG_CREATED_TS TIMESTAMP(6) CONSTRAINT NN_CREATED_TS NOT NULL,
+    WG_IS_OVERWEIGHT BOOLEAN
+);
+
+-- Primary Key
+ALTER TABLE WEIGHT
+    ADD CONSTRAINT PK_WEIGHT_ID
+        PRIMARY KEY (WG_ID);
+
+-- Foreign Key to DOG
+ALTER TABLE WEIGHT
+    ADD CONSTRAINT FK_WEIGHT_DOG
+        FOREIGN KEY (WG_DOG_ID)
+            REFERENCES DOG (DOG_ID);
+
+-- Table level comment
+COMMENT ON TABLE WEIGHT IS 'This table stores weight records for a dog.';
+
+-- Column level comments
+COMMENT ON COLUMN WEIGHT.WG_ID IS 'The unique identifier for this weight record.';
+COMMENT ON COLUMN WEIGHT.WG_DOG_ID IS 'The ID of the dog this weight entry belongs to.';
+COMMENT ON COLUMN WEIGHT.WG_CURRENT IS 'The current measured weight of the dog in kilograms.';
+COMMENT ON COLUMN WEIGHT.WG_GOAL IS 'The target goal weight for the dog in kilograms.';
+COMMENT ON COLUMN WEIGHT.WG_CREATED_TS IS 'The timestamp when this weight record was created.';
+COMMENT ON COLUMN WEIGHT.WG_IS_OVERWEIGHT IS 'Boolean flag indicating if the dog is considered overweight.';

@@ -1,0 +1,35 @@
+CREATE TABLE DENTAL
+(
+    DL_ID VARCHAR(16) CONSTRAINT NN_DENTAL_ID NOT NULL,
+    DL_DOG_ID VARCHAR(16) CONSTRAINT NN_DENTAL_DOG_ID NOT NULL,
+    DL_PLAQUE_STATUS VARCHAR(8) CONSTRAINT NN_DENTAL_PLAQUE NOT NULL,
+    DL_TOOTH_LOSS BOOLEAN CONSTRAINT NN_DENTAL_TOOTH_LOSS NOT NULL,
+    DL_GINGIVITIS_STATUS VARCHAR(8) CONSTRAINT NN_DENTAL_GINGIVITIS NOT NULL,
+    DL_LAST_CLEANING_DATE DATE,
+    DL_SEVERITY_SCORE NUMERIC(5,2),
+    DL_CREATED_TS TIMESTAMP(6) CONSTRAINT NN_DENTAL_CREATED_TS NOT NULL
+);
+
+-- Primary Key
+ALTER TABLE DENTAL
+    ADD CONSTRAINT PK_DENTAL_ID
+        PRIMARY KEY (DL_ID);
+
+-- Foreign Key to DOG
+ALTER TABLE DENTAL
+    ADD CONSTRAINT FK_DENTAL_DOG
+        FOREIGN KEY (DL_DOG_ID)
+            REFERENCES DOG (DOG_ID);
+
+-- Table comment
+COMMENT ON TABLE DENTAL IS 'This table stores dental health records for a dog, including plaque, gum health, and severity scores.';
+
+-- Column comments
+COMMENT ON COLUMN DENTAL.DL_ID IS 'The unique identifier for this dental record.';
+COMMENT ON COLUMN DENTAL.DL_DOG_ID IS 'The ID of the dog this dental entry belongs to.';
+COMMENT ON COLUMN DENTAL.DL_PLAQUE_STATUS IS 'Plaque level status: HI, LO, or NORM.';
+COMMENT ON COLUMN DENTAL.DL_TOOTH_LOSS IS 'Boolean flag indicating if the dog has missing teeth.';
+COMMENT ON COLUMN DENTAL.DL_GINGIVITIS_STATUS IS 'Gum health status: NONE, MILD, SEVERE.';
+COMMENT ON COLUMN DENTAL.DL_LAST_CLEANING_DATE IS 'The date of the last dental cleaning.';
+COMMENT ON COLUMN DENTAL.DL_SEVERITY_SCORE IS 'Composite score combining plaque, tartar, gingivitis, etc., for trend analysis.';
+COMMENT ON COLUMN DENTAL.DL_CREATED_TS IS 'The timestamp when this dental record was created.';
