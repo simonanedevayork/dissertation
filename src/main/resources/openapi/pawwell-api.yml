@@ -1,0 +1,131 @@
+openapi: 3.0.3
+info:
+  title: Dog Health Tracker API
+  version: 1.0.0
+  description: API for managing users in Dog Health Tracker.
+
+servers:
+  - url: http://localhost:8080/api/v1
+
+security:
+  - bearerAuth: []
+
+paths:
+  /users/{participant-id}:
+    get:
+      summary: Get a user by ID
+      operationId: getUserById
+      tags:
+        - Users
+      parameters:
+        - name: participant-id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/ParticipantId'
+          description: The identifier of the participant.
+      responses:
+        '200':
+          description: GET operation was successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '404':
+          description: User not found
+        '401':
+          description: Unauthorized (invalid or missing token)
+
+    put:
+      summary: Update a user by ID
+      operationId: updateUserById
+      tags:
+        - Users
+      parameters:
+        - name: participant-id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/ParticipantId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserUpdateRequest'
+      responses:
+        '200':
+          description: User updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '404':
+          description: User not found
+        '400':
+          description: Invalid request body
+        '401':
+          description: Unauthorized (invalid or missing token)
+
+    delete:
+      summary: Delete a user by ID
+      operationId: deleteUserById
+      tags:
+        - Users
+      parameters:
+        - name: participant-id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/ParticipantId'
+      responses:
+        '204':
+          description: User deleted successfully (no content)
+        '404':
+          description: User not found
+        '401':
+          description: Unauthorized (invalid or missing token)
+
+components:
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    ParticipantId:
+      type: string
+      example: "1234"
+
+    UserResponse:
+      type: object
+      description: The user response.
+      properties:
+        participantId:
+          type: string
+          example: "1234"
+        email:
+          type: string
+          format: email
+          example: "user@example.com"
+      required:
+        - participantId
+        - email
+
+    UserUpdateRequest:
+      type: object
+      description: Request to update a user.
+      properties:
+        email:
+          type: string
+          format: email
+          example: "simona@pawwell.com"
+        password:
+          type: string
+          minLength: 8
+          example: "newPassword123"
+      required:
+        - email
+        - password

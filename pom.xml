@@ -104,6 +104,26 @@
             <artifactId>spring-security-test</artifactId>
             <scope>test</scope>
         </dependency>
+
+        <!-- jwt -->
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-api</artifactId>
+            <version>0.11.5</version>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-impl</artifactId>
+            <version>0.11.5</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-jackson</artifactId>
+            <version>0.11.5</version>
+            <scope>runtime</scope>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -142,7 +162,7 @@
                         </goals>
                         <phase>generate-sources</phase>
                         <configuration>
-                            <inputSpec>${project.build.directory}/extracted-contracts/openapi/dogtracker-api.yml</inputSpec>
+                            <inputSpec>${project.basedir}/src/main/resources/openapi/pawwell-api.yml</inputSpec>
                             <generatorName>spring</generatorName>
                             <apiPackage>com.york.doghealthtracker.api</apiPackage>
                             <modelPackage>com.york.doghealthtracker.model</modelPackage>
