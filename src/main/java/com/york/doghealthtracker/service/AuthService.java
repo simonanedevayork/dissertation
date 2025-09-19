@@ -10,10 +10,12 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -46,7 +48,12 @@ public class AuthService {
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList());
 
-        return new JwtResponse(jwt, authentication.getName(), roles);
+        // Extract and return participantId in JWT response
+        User userDetails = (User) authentication.getPrincipal();
+        Optional<UserEntity> userEntity = userRepository.findByEmail(userDetails.getUsername());
+        String participantId = userEntity.map(UserEntity::getId).orElse(null);
+
+        return new JwtResponse(jwt, authentication.getName(), roles, participantId);
     }
 
     public String register(UserEntity user) {

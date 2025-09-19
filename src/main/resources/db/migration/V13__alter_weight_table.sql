@@ -1,0 +1,5 @@
+ALTER TABLE weight
+    ALTER COLUMN wg_id TYPE VARCHAR(36);
+
+ALTER TABLE weight
+    ALTER COLUMN wg_dog_id TYPE VARCHAR(36);

@@ -86,6 +86,190 @@ paths:
         '401':
           description: Unauthorized (invalid or missing token)
 
+  /users/{participant-id}/dog:
+    get:
+      summary: Get the dog for a given participant
+      operationId: getDogByParticipantId
+      tags:
+        - Users
+      parameters:
+        - name: participant-id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: GET operation was successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DogResponse'
+        '404':
+          description: User not found
+        '401':
+          description: Unauthorized (invalid or missing token)
+
+  /dogs:
+    post:
+      summary: Add a new dog
+      operationId: addDog
+      tags:
+        - Dogs
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DogRequest'
+      responses:
+        '201':
+          description: Dog created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DogResponse'
+        '400':
+          description: Invalid request body
+        '401':
+          description: Unauthorized (invalid or missing token)
+
+  /dogs/{dog-id}:
+    get:
+      summary: Get a dog by ID
+      operationId: getDogById
+      tags:
+        - Dogs
+      parameters:
+        - name: dog-id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The identifier of the dog.
+      responses:
+        '200':
+          description: Dog fetched successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DogResponse'
+        '404':
+          description: Dog not found
+        '401':
+          description: Unauthorized (invalid or missing token)
+    put:
+      summary: Update a dog by ID
+      operationId: updateDogById
+      tags:
+        - Dogs
+      parameters:
+        - name: dog-id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The identifier of the dog to update.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DogRequest'
+      responses:
+        '200':
+          description: Dog updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DogResponse'
+        '400':
+          description: Invalid request body
+        '404':
+          description: Dog not found
+        '401':
+          description: Unauthorized (invalid or missing token)
+
+  /dogs/{dog-id}/weights:
+    post:
+      summary: Add a weight record for a dog
+      operationId: addWeight
+      tags:
+        - Weight
+      parameters:
+        - name: dog-id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WeightRequest'
+      responses:
+        '201':
+          description: Weight record created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WeightResponse'
+        '400':
+          description: Invalid request body
+        '404':
+          description: Dog not found
+
+    get:
+      summary: Get all weight records for a dog
+      operationId: getWeights
+      tags:
+        - Weight
+      parameters:
+        - name: dog-id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of weight records
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/WeightResponse'
+        '404':
+          description: Dog not found
+
+  /dogs/{dog-id}/weights/{weight-id}:
+    delete:
+      summary: Delete a weight record for a dog
+      operationId: deleteWeight
+      tags:
+        - Weight
+      parameters:
+        - name: dog-id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The identifier of the dog.
+        - name: weight-id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The identifier of the weight record.
+      responses:
+        '204':
+          description: Weight record deleted successfully
+        '404':
+          description: Dog or weight record not found
+        '401':
+          description: Unauthorized (invalid or missing token)
+
 components:
 
   securitySchemes:
@@ -125,7 +309,78 @@ components:
         password:
           type: string
           minLength: 8
-          example: "newPassword123"
+          example: "password123"
       required:
         - email
         - password
+
+    DogRequest:
+      type: object
+      description: Dog object used to create or update a dog.
+      properties:
+        name:
+          type: string
+          example: "Buddy"
+        gender:
+          type: string
+          example: "Male"
+        breed:
+          type: string
+          example: "Golden Retriever"
+        birthDate:
+          type: string
+          format: date
+          example: "2020-05-15"
+        photoUrl:
+          type: string
+          format: uri
+          description: "URL pointing to the dog’s photo"
+          example: "https://cloud.example.com/dogs/dog123.jpg"
+        isNeutered:
+          type: boolean
+          example: true
+      required:
+        - name
+        - gender
+        - breed
+        - birthDate
+        - isNeutered
+
+    DogResponse:
+      allOf:
+        - $ref: '#/components/schemas/DogRequest'
+        - type: object
+          description: The dog object.
+          properties:
+            dogId:
+              type: string
+              example: "dog-123"
+            ownerId:
+              type: string
+              example: "user-456"
+
+    WeightRequest:
+      type: object
+      properties:
+        current:
+          type: number
+          format: float
+          example: 12.50
+        date:
+          type: string
+          format: date-time
+          example: "2025-09-17"
+      required:
+        - current
+
+    WeightResponse:
+      allOf:
+        - $ref: '#/components/schemas/WeightRequest'
+        - type: object
+          properties:
+            id:
+              type: string
+              example: "wg-123"
+            dogId:
+              type: string
+              example: "dog-123"

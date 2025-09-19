@@ -1,0 +1,2 @@
+ALTER TABLE dog
+    ALTER COLUMN dog_id TYPE VARCHAR(36);

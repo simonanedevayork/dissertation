@@ -1,0 +1,11 @@
+ALTER TABLE dog
+    DROP COLUMN IF EXISTS dog_age;
+
+ALTER TABLE dog
+    DROP COLUMN IF EXISTS dog_height;
+
+ALTER TABLE dog
+    DROP COLUMN IF EXISTS dog_width;
+
+ALTER TABLE dog
+    DROP COLUMN IF EXISTS dog_quiz_completed;
