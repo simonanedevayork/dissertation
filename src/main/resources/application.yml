@@ -16,3 +16,43 @@ spring:
   jwt:
     secret: "n8C2oYhsr3T8X4w7O4s0+8zv6LhXfwI6Dp7wM8Fr9uR6nBYaVcyt9NLXkHTyDkKw"
     expiration-ms: 3600000 # 1 hour
+
+hormone:
+  quiz:
+    questions:
+      - id: q1
+        category: thyroid
+        text: "Is your dog’s coat becoming brittle, dry, or falling out more than usual?"
+        options: [ Always, Frequently, Occasionally, Never ]
+      - id: q2
+        category: thyroid
+        text: "Has your dog shown unusual weight gain despite normal diet and exercise?"
+        options: [ Always, Frequently, Occasionally, Never ]
+      - id: q3
+        category: thyroid
+        text: "Does your dog seem lethargic or less interested in activities?"
+        options: [ Always, Frequently, Occasionally, Never ]
+      - id: q4
+        category: adrenal
+        text: "Is your dog excessively thirsty or urinating more than usual?"
+        options: [ Always, Frequently, Occasionally, Never ]
+      - id: q5
+        category: adrenal
+        text: "Has your dog developed a pot-bellied appearance?"
+        options: [ Always, Frequently, Occasionally, Never ]
+      - id: q6
+        category: adrenal
+        text: "Does your dog pant excessively even when not hot or exercising?"
+        options: [ Always, Frequently, Occasionally, Never ]
+      - id: q7
+        category: pancreatic
+        text: "Has your dog experienced episodes of sudden weakness or shaking?"
+        options: [ Always, Frequently, Occasionally, Never ]
+      - id: q8
+        category: pancreatic
+        text: "Does your dog show changes in appetite (too high or too low)?"
+        options: [ Always, Frequently, Occasionally, Never ]
+      - id: q9
+        category: pancreatic
+        text: "Has your dog had unexplained digestive issues (vomiting, diarrhea)?"
+        options: [ Always, Frequently, Occasionally, Never ]

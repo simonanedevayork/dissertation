@@ -270,6 +270,57 @@ paths:
         '401':
           description: Unauthorized (invalid or missing token)
 
+  /hormones/quiz:
+    get:
+      summary: Get hormone quiz questions
+      operationId: getHormoneQuiz
+      tags:
+        - Hormones
+      responses:
+        '200':
+          description: List of quiz questions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/HormoneQuestion'
+    post:
+      summary: Submit hormone quiz answers
+      operationId: submitHormoneQuiz
+      tags:
+        - Hormones
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties:
+                type: string
+              example:
+                q1: "Always"
+                q2: "Occasionally"
+                q3: "Never"
+      responses:
+        '201':
+          description: Quiz answers submitted successfully
+        '400':
+          description: Invalid quiz submission
+
+  /hormones/status:
+    get:
+      summary: Get hormone status results
+      operationId: getHormoneStatus
+      tags:
+        - Hormones
+      responses:
+        '200':
+          description: Hormone status per group
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HormoneStatusResponse'
 components:
 
   securitySchemes:
@@ -384,3 +435,38 @@ components:
             dogId:
               type: string
               example: "dog-123"
+
+    HormoneQuestion:
+      type: object
+      properties:
+        id:
+          type: string
+          example: q1
+        category:
+          type: string
+          enum: [thyroid, adrenal, pancreatic]
+          example: thyroid
+        question:
+          type: string
+          example: "Is your dog’s coat becoming brittle, dry, or falling out more than usual?"
+        options:
+          type: array
+          items:
+            type: string
+          example: ["Always", "Frequently", "Occasionally", "Never"]
+
+    HormoneStatusResponse:
+      type: object
+      properties:
+        thyroid:
+          type: string
+          enum: [green, yellow, red]
+          example: green
+        adrenal:
+          type: string
+          enum: [green, yellow, red]
+          example: yellow
+        pancreatic:
+          type: string
+          enum: [green, yellow, red]
+          example: red
