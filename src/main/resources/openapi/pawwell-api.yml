@@ -282,9 +282,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/HormoneQuestion'
+                $ref: '#/components/schemas/HormoneQuestionList'
     post:
       summary: Submit hormone quiz answers
       operationId: submitHormoneQuiz
@@ -295,13 +293,7 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              additionalProperties:
-                type: string
-              example:
-                q1: "Always"
-                q2: "Occasionally"
-                q3: "Never"
+              $ref: '#/components/schemas/HormoneQuizSubmission'
       responses:
         '201':
           description: Quiz answers submitted successfully
@@ -443,30 +435,50 @@ components:
           type: string
           example: q1
         category:
-          type: string
-          enum: [thyroid, adrenal, pancreatic]
-          example: thyroid
+          $ref: '#/components/schemas/HormoneCategory'
         question:
           type: string
           example: "Is your dog’s coat becoming brittle, dry, or falling out more than usual?"
         options:
           type: array
           items:
-            type: string
-          example: ["Always", "Frequently", "Occasionally", "Never"]
+            $ref: '#/components/schemas/QuizAnswer'
 
     HormoneStatusResponse:
       type: object
       properties:
         thyroid:
-          type: string
-          enum: [green, yellow, red]
-          example: green
+          $ref: '#/components/schemas/HormoneStatus'
         adrenal:
-          type: string
-          enum: [green, yellow, red]
-          example: yellow
+          $ref: '#/components/schemas/HormoneStatus'
         pancreatic:
-          type: string
-          enum: [green, yellow, red]
-          example: red
+          $ref: '#/components/schemas/HormoneStatus'
+
+    HormoneQuizSubmission:
+      type: object
+      additionalProperties:
+        $ref: '#/components/schemas/QuizAnswer'
+      example:
+        q1: Always
+        q2: Occasionally
+        q3: Never
+
+    HormoneStatus:
+      type: string
+      enum: [green, yellow, red]
+      example: green
+
+    QuizAnswer:
+      type: string
+      enum: [Always, Frequently, Occasionally, Never]
+      example: Always
+
+    HormoneCategory:
+      type: string
+      enum: [thyroid, adrenal, pancreatic]
+      example: thyroid
+
+    HormoneQuestionList:
+      type: array
+      items:
+        $ref: '#/components/schemas/HormoneQuestion'

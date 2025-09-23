@@ -1,6 +1,8 @@
 package com.york.doghealthtracker.config;
 
+import com.york.doghealthtracker.model.HormoneCategory;
 import com.york.doghealthtracker.model.HormoneQuestion;
+import com.york.doghealthtracker.model.QuizAnswer;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -20,8 +22,8 @@ public class HormoneQuizConfig {
     @Setter
     public static class Question {
         private String id;
-        private HormoneQuestion.CategoryEnum category;
+        private HormoneCategory category;
         private String text;
-        private List<String> options;
+        private List<QuizAnswer> options;
     }
 }

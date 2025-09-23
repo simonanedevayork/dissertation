@@ -21,21 +21,21 @@ public class DogEntity {
     @JoinColumn(name = "dog_owner")
     private UserEntity owner;
 
-    @Column(name = "DOG_NAME")
+    @Column(name = "dog_name")
     private String name;
 
-    @Column(name = "DOG_BREED")
+    @Column(name = "dog_breed")
     private String breed;
 
-    @Column(name = "DOG_GENDER")
+    @Column(name = "dog_gender")
     private String gender;
 
-    @Column(name = "DOG_BIRTH_DATE")
+    @Column(name = "dog_birth_date")
     private LocalDate birthDate;
 
-    @Column(name = "DOG_PHOTO")
+    @Column(name = "dog_photo")
     private String photo;
 
-    @Column(name = "DOG_NURTURED")
+    @Column(name = "dog_nurtured")
     private Boolean isNeutered;
 }
