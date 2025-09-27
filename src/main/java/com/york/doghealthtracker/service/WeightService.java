@@ -57,7 +57,7 @@ public class WeightService {
         resp.setId(entity.getId());
         resp.setDogId(entity.getDog().getId());
         resp.setCurrent(entity.getCurrent());
-        resp.setDate(LocalDateTime.now().atOffset(ZoneOffset.UTC)); // TODO: see conversion and fix
+        resp.setDate(entity.getCreatedTs().atOffset(ZoneOffset.UTC));
         return resp;
     }
 }

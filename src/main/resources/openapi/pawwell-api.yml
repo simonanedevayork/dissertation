@@ -313,6 +313,289 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HormoneStatusResponse'
+
+  /dogs/{dog-id}/dental:
+    post:
+      summary: Add a dental record for a dog
+      operationId: addDentalRecord
+      tags:
+        - Dental
+      parameters:
+        - name: dog-id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The identifier of the dog.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DentalRequest'
+      responses:
+        '201':
+          description: Dental record created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DentalResponse'
+        '400':
+          description: Invalid request body
+        '404':
+          description: Dog not found
+        '401':
+          description: Unauthorized (invalid or missing token)
+
+    get:
+      summary: Get all dental records for a dog
+      operationId: getDentalRecords
+      tags:
+        - Dental
+      parameters:
+        - name: dog-id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of dental records
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DentalResponse'
+        '404':
+          description: Dog not found
+        '401':
+          description: Unauthorized (invalid or missing token)
+
+  /dogs/{dog-id}/dental/{dental-id}:
+    get:
+      summary: Get a dental record by ID
+      operationId: getDentalById
+      tags:
+        - Dental
+      parameters:
+        - name: dog-id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: dental-id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Dental record fetched successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DentalResponse'
+        '404':
+          description: Dog or dental record not found
+
+    put:
+      summary: Update a dental record by ID
+      operationId: updateDental
+      tags:
+        - Dental
+      parameters:
+        - name: dog-id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: dental-id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DentalRequest'
+      responses:
+        '200':
+          description: Dental record updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DentalResponse'
+        '400':
+          description: Invalid request body
+        '404':
+          description: Dog or dental record not found
+
+    delete:
+      summary: Delete a dental record by ID
+      operationId: deleteDental
+      tags:
+        - Dental
+      parameters:
+        - name: dog-id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: dental-id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Dental record deleted successfully
+        '404':
+          description: Dog or dental record not found
+
+  /dogs/{dog-id}/heart:
+    post:
+      summary: Add a heart record for a dog
+      operationId: addHeartRecord
+      tags:
+        - Heart
+      parameters:
+        - name: dog-id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The identifier of the dog.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HeartRequest'
+      responses:
+        '201':
+          description: Heart record created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HeartResponse'
+        '400':
+          description: Invalid request body
+        '404':
+          description: Dog not found
+        '401':
+          description: Unauthorized (invalid or missing token)
+
+    get:
+      summary: Get all heart records for a dog
+      operationId: getHeartRecords
+      tags:
+        - Heart
+      parameters:
+        - name: dog-id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of heart records
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/HeartResponse'
+        '404':
+          description: Dog not found
+        '401':
+          description: Unauthorized (invalid or missing token)
+
+  /dogs/{dog-id}/heart/{heart-id}:
+    get:
+      summary: Get a heart record by ID
+      operationId: getHeartById
+      tags:
+        - Heart
+      parameters:
+        - name: dog-id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: heart-id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Heart record fetched successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HeartResponse'
+        '404':
+          description: Dog or heart record not found
+
+    put:
+      summary: Update a heart record by ID
+      operationId: updateHeartRecord
+      tags:
+        - Heart
+      parameters:
+        - name: dog-id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: heart-id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HeartRequest'
+      responses:
+        '200':
+          description: Heart record updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HeartResponse'
+        '400':
+          description: Invalid request body
+        '404':
+          description: Dog or heart record not found
+
+    delete:
+      summary: Delete a heart record by ID
+      operationId: deleteHeartRecord
+      tags:
+        - Heart
+      parameters:
+        - name: dog-id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: heart-id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Heart record deleted successfully
+        '404':
+          description: Dog or heart record not found
+
 components:
 
   securitySchemes:
@@ -482,3 +765,106 @@ components:
       type: array
       items:
         $ref: '#/components/schemas/HormoneQuestion'
+
+    DentalRequest:
+      type: object
+      description: Request object to create or update a dental record.
+      properties:
+        plaqueStatus:
+          $ref: '#/components/schemas/PlaqueStatus'
+        toothLoss:
+          type: boolean
+          example: false
+        gingivitisStatus:
+          $ref: '#/components/schemas/GingivitisStatus'
+        lastCleaningDate:
+          type: string
+          format: date
+          example: "2025-09-01"
+      required:
+        - plaqueStatus
+        - toothLoss
+        - gingivitisStatus
+
+    DentalResponse:
+      allOf:
+        - $ref: '#/components/schemas/DentalRequest'
+        - type: object
+          description: Dental record response with IDs.
+          properties:
+            dentalId:
+              type: string
+              example: "dl-123"
+            dogId:
+              type: string
+              example: "dog-123"
+            createdTs:
+              type: string
+              format: date-time
+              example: "2025-09-20T10:15:30"
+
+    PlaqueStatus:
+      type: string
+      description: Plaque level status
+      enum: [HI, LO, NORM]
+      example: HI
+
+    GingivitisStatus:
+      type: string
+      description: Gum health status
+      enum: [NONE, MILD, SEVERE]
+      example: MILD
+
+    HeartRequest:
+      type: object
+      description: Request object to create or update a heart record.
+      properties:
+        fatigue:
+          type: boolean
+          example: false
+        coughing:
+          type: boolean
+          example: false
+        murmurStatus:
+          $ref: '#/components/schemas/MurmurStatus'
+        heartRate:
+          type: number
+          format: integer
+          example: 120
+        breathingRate:
+          type: number
+          format: integer
+          description: The number of breaths per minute.
+          example: 30
+        lastDirofilariaPreventionDate:
+          type: string
+          format: date
+          example: "2025-09-01"
+      required:
+        - fatigue
+        - coughing
+        - heartRate
+        - breathingRate
+
+    HeartResponse:
+      allOf:
+        - $ref: '#/components/schemas/HeartRequest'
+        - type: object
+          description: Heart record response.
+          properties:
+            heartId:
+              type: string
+              example: "hr-123"
+            dogId:
+              type: string
+              example: "dog-123"
+            createdTs:
+              type: string
+              format: date-time
+              example: "2025-09-20T10:15:30"
+
+    MurmurStatus:
+      type: string
+      description: Heart murmur status (grades I–VI or none)
+      enum: [NONE, GRADE_I, GRADE_II, Grade_III, Grade_IV, Grade_V, Grade_VI]
+      example: GRADE_II

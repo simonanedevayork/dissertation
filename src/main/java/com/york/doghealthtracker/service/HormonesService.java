@@ -19,6 +19,9 @@ import java.util.stream.Collectors;
 
 import static com.york.doghealthtracker.model.QuizAnswer.*;
 
+/**
+ * Calculates the Quiz status
+ */
 @Service
 public class HormonesService {
 
@@ -42,7 +45,7 @@ public class HormonesService {
 
     public void calculateQuizStatus(Map<String, QuizAnswer> requestBody, DogEntity dog) {
 
-        // delete if entry exists to avoid duplicates AT THIS POINT
+        // delete if entry exists to avoid duplicates (might be extended further)
         hormoneRepository.deleteByDog_Id(dog.getId());
 
         Map<HormoneCategory, List<QuizAnswer>> answersByCategory = quizConfig.getQuestions().stream()

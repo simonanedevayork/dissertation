@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
@@ -19,13 +18,13 @@ public class WeightEntity {
     private String id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "WG_DOG_ID", nullable = false)
+    @JoinColumn(name = "WG_DOG_ID")
     private DogEntity dog;
 
-    @Column(name = "WG_CURRENT", nullable = false)
+    @Column(name = "WG_CURRENT")
     private Float current;
 
-    @Column(name = "WG_CREATED_TS", nullable = false)
+    @Column(name = "WG_CREATED_TS")
     private LocalDateTime createdTs;
 
 }
