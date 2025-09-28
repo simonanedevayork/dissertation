@@ -293,7 +293,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/HormoneQuizSubmission'
+              $ref: '#/components/schemas/QuizSubmission'
       responses:
         '201':
           description: Quiz answers submitted successfully
@@ -596,6 +596,233 @@ paths:
         '404':
           description: Dog or heart record not found
 
+  /mobility/quiz:
+    get:
+      summary: Get mobility quiz questions
+      operationId: getMobilityQuiz
+      tags:
+        - Mobility
+      responses:
+        '200':
+          description: List of quiz questions
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MobilityQuestionList'
+    post:
+      summary: Submit mobility quiz answers
+      operationId: submitMobilityQuiz
+      tags:
+        - Mobility
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QuizSubmission'
+      responses:
+        '201':
+          description: Quiz answers submitted successfully
+        '400':
+          description: Invalid quiz submission
+
+  /mobility/status:
+    get:
+      summary: Get mobility status results
+      operationId: getMobilityStatus
+      tags:
+        - Mobility
+      responses:
+        '200':
+          description: Mobility status per group
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MobilityStatusResponse'
+
+    # ======================
+    # HEALTH RECORD API
+    # ======================
+  /dogs/{dog-id}/health-records:
+    post:
+      summary: Upload a health record for a dog
+      operationId: addHealthRecord
+      tags:
+        - Health Records
+      parameters:
+        - name: dog-id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The identifier of the dog.
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/HealthRecordRequest'
+      responses:
+        '201':
+          description: Health record uploaded successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthRecordResponse'
+        '400':
+          description: Invalid request body
+        '404':
+          description: Dog not found
+        '401':
+          description: Unauthorized
+
+    get:
+      summary: Get all health records for a dog
+      operationId: getHealthRecords
+      tags:
+        - Health Records
+      parameters:
+        - name: dog-id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The identifier of the dog.
+      responses:
+        '200':
+          description: List of health records
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/HealthRecordResponse'
+        '404':
+          description: Dog not found
+        '401':
+          description: Unauthorized
+
+  /dogs/{dog-id}/health-records/{health-record-id}:
+    get:
+      summary: Get a health record by ID
+      operationId: getHealthRecordById
+      tags:
+        - Health Records
+      parameters:
+        - name: dog-id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: health-record-id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Health record fetched successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthRecordResponse'
+        '404':
+          description: Dog or health record not found
+        '401':
+          description: Unauthorized
+
+    put:
+      summary: Update a health record by ID
+      operationId: updateHealthRecord
+      tags:
+        - Health Records
+      parameters:
+        - name: dog-id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: health-record-id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/HealthRecordRequest'
+      responses:
+        '200':
+          description: Health record updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthRecordResponse'
+        '404':
+          description: Dog or health record not found
+        '400':
+          description: Invalid request body
+        '401':
+          description: Unauthorized
+
+    delete:
+      summary: Delete a health record by ID
+      operationId: deleteHealthRecord
+      tags:
+        - Health Records
+      parameters:
+        - name: dog-id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: health-record-id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Health record deleted successfully
+        '404':
+          description: Dog or health record not found
+        '401':
+          description: Unauthorized
+
+  /dogs/{dog-id}/health-records/{health-record-id}/download:
+    get:
+      summary: Download a health record file
+      operationId: downloadHealthRecord
+      tags:
+        - Health Records
+      parameters:
+        - name: dog-id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The identifier of the dog.
+        - name: health-record-id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The identifier of the health record.
+      responses:
+        '200':
+          description: The binary file stream
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+        '404':
+          description: Dog or health record not found
+        '401':
+          description: Unauthorized
+
 components:
 
   securitySchemes:
@@ -604,6 +831,9 @@ components:
       scheme: bearer
       bearerFormat: JWT
 
+    # ======================
+    # USER COMPONENTS
+    # ======================
   schemas:
     ParticipantId:
       type: string
@@ -640,6 +870,9 @@ components:
         - email
         - password
 
+    # ======================
+    # DOG COMPONENTS
+    # ======================
     DogRequest:
       type: object
       description: Dog object used to create or update a dog.
@@ -685,6 +918,9 @@ components:
               type: string
               example: "user-456"
 
+    # ======================
+    # WEIGHT COMPONENTS
+    # ======================
     WeightRequest:
       type: object
       properties:
@@ -711,6 +947,9 @@ components:
               type: string
               example: "dog-123"
 
+    # ======================
+    # HORMONE COMPONENTS
+    # ======================
     HormoneQuestion:
       type: object
       properties:
@@ -731,13 +970,13 @@ components:
       type: object
       properties:
         thyroid:
-          $ref: '#/components/schemas/HormoneStatus'
+          $ref: '#/components/schemas/QuizCategoryStatus'
         adrenal:
-          $ref: '#/components/schemas/HormoneStatus'
+          $ref: '#/components/schemas/QuizCategoryStatus'
         pancreatic:
-          $ref: '#/components/schemas/HormoneStatus'
+          $ref: '#/components/schemas/QuizCategoryStatus'
 
-    HormoneQuizSubmission:
+    QuizSubmission:
       type: object
       additionalProperties:
         $ref: '#/components/schemas/QuizAnswer'
@@ -746,7 +985,7 @@ components:
         q2: Occasionally
         q3: Never
 
-    HormoneStatus:
+    QuizCategoryStatus:
       type: string
       enum: [green, yellow, red]
       example: green
@@ -766,6 +1005,48 @@ components:
       items:
         $ref: '#/components/schemas/HormoneQuestion'
 
+    # ======================
+    # MOBILITY COMPONENTS
+    # ======================
+    MobilityQuestion:
+      type: object
+      properties:
+        id:
+          type: string
+          example: q1
+        category:
+          $ref: '#/components/schemas/MobilityCategory'
+        question:
+          type: string
+          example: "Is your dog limping, skipping steps, or lifting a hind leg while walking or running?"
+        options:
+          type: array
+          items:
+            $ref: '#/components/schemas/QuizAnswer'
+
+    MobilityStatusResponse:
+      type: object
+      properties:
+        patellar luxation:
+          $ref: '#/components/schemas/QuizCategoryStatus'
+        hip dysplasia:
+          $ref: '#/components/schemas/QuizCategoryStatus'
+        arthritis:
+          $ref: '#/components/schemas/QuizCategoryStatus'
+
+    MobilityCategory:
+      type: string
+      enum: [luxation, dysplasia, arthritis]
+      example: luxation
+
+    MobilityQuestionList:
+      type: array
+      items:
+        $ref: '#/components/schemas/MobilityQuestion'
+
+    # ======================
+    # DENTAL COMPONENTS
+    # ======================
     DentalRequest:
       type: object
       description: Request object to create or update a dental record.
@@ -815,6 +1096,9 @@ components:
       enum: [NONE, MILD, SEVERE]
       example: MILD
 
+    # ======================
+    # HEART COMPONENTS
+    # ======================
     HeartRequest:
       type: object
       description: Request object to create or update a heart record.
@@ -868,3 +1152,46 @@ components:
       description: Heart murmur status (grades I–VI or none)
       enum: [NONE, GRADE_I, GRADE_II, Grade_III, Grade_IV, Grade_V, Grade_VI]
       example: GRADE_II
+
+    # ======================
+    # HEALTH RECORDS COMPONENTS
+    # ======================
+    HealthRecordRequest:
+      type: object
+      description: The health record request.
+      properties:
+        file:
+          type: string
+          format: binary
+          description: File to upload (PDF, DOC, JPG, etc.)
+        documentName:
+          type: string
+          description: Document name/title
+      required:
+        - file
+        - documentName
+
+    HealthRecordResponse:
+      type: object
+      properties:
+        healthRecordId:
+          type: string
+          example: "hr-123"
+        dogId:
+          type: string
+          example: "dog-123"
+        documentName:
+          type: string
+          example: "Vaccination Record"
+        documentUrl:
+          type: string
+          format: uri
+          example: "https://example.com/example.pdf"
+        contentType:
+          type: string
+          example: "application/pdf"
+          description: The type of the uploaded file (pdf, doc, image, etc.)
+        createdTs:
+          type: string
+          format: date-time
+          example: "2025-09-27T14:35:00"

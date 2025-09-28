@@ -1,0 +1,107 @@
+package com.york.doghealthtracker.service;
+
+import com.york.doghealthtracker.entity.DogEntity;
+import com.york.doghealthtracker.entity.HealthRecordEntity;
+import com.york.doghealthtracker.model.HealthRecordResponse;
+import com.york.doghealthtracker.repository.DogRepository;
+import com.york.doghealthtracker.repository.HealthRecordRepository;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.core.io.Resource;
+
+import java.net.URI;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+
+/**
+ * will only handle pdf at this point
+ */
+@Service
+@Slf4j
+public class HealthRecordService {
+    private static final String CONTENT_TYPE = "application/pdf";
+    private final HealthRecordRepository healthRecordRepository;
+    private final DogRepository dogRepository;
+    private final FileStorageService fileStorageService;
+
+    @Value("${app.base-url}")
+    private String baseUrl;
+
+    public HealthRecordService(HealthRecordRepository healthRecordRepository, DogRepository dogRepository, FileStorageService fileStorageService) {
+        this.healthRecordRepository = healthRecordRepository;
+        this.dogRepository = dogRepository;
+        this.fileStorageService = fileStorageService;
+    }
+
+    public HealthRecordResponse addHealthRecord(String dogId, MultipartFile file, String documentName) {
+        DogEntity dog = dogRepository.findById(dogId)
+                .orElseThrow(() -> new RuntimeException("Dog not found: " + dogId));
+
+        try {
+            String storedFilename = fileStorageService.store(dogId, file);
+            String fileUrl = String.format("%s/uploads/%s/%s", baseUrl, dogId, storedFilename);
+
+            HealthRecordEntity entity = HealthRecordEntity.builder()
+                    .dog(dog)
+                    .documentName(documentName)
+                    .documentUrl(fileUrl)
+                    .contentType(file.getContentType())
+                    .createdTs(LocalDateTime.now((ZoneOffset.UTC)))
+                    .build();
+
+            HealthRecordEntity saved = healthRecordRepository.save(entity);
+
+            return toResponse(saved);
+
+        } catch (Exception e) {
+            throw new RuntimeException("File upload failed", e);
+        }
+    }
+
+    public ResponseEntity<Resource> getHealthRecordFile(String dogId, String healthRecordId) {
+        HealthRecordEntity record = healthRecordRepository.findById(healthRecordId)
+                .orElseThrow(() -> new RuntimeException("Health record not found for dogId=" + dogId));
+
+        try {
+            // extract stored filename from URL (last segment)
+            String filename = Paths.get(record.getDocumentUrl()).getFileName().toString();
+            Path filePath = Paths.get("uploads", dogId, filename);
+
+            Resource resource = fileStorageService.loadAsResource(dogId, filename);
+
+            if (!resource.exists()) {
+                throw new RuntimeException("File not found: " + filename);
+            }
+
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION,
+                            "attachment; filename=\"" + record.getDocumentName() + ".pdf\"")
+                    .contentType(MediaType.APPLICATION_PDF)
+                    .body(resource);
+
+        } catch (Exception e) {
+            throw new RuntimeException("Could not read file", e);
+        }
+    }
+
+    private HealthRecordResponse toResponse(HealthRecordEntity entity) {
+        HealthRecordResponse resp = new HealthRecordResponse();
+        resp.setHealthRecordId(entity.getId());
+        resp.setDogId(entity.getDog().getId());
+        resp.setDocumentName(entity.getDocumentName());
+        resp.setDocumentUrl(URI.create(entity.getDocumentUrl()));
+        resp.setContentType(entity.getContentType());
+        resp.setCreatedTs(OffsetDateTime.of(entity.getCreatedTs(), ZoneOffset.UTC));
+        return resp;
+    }
+
+}

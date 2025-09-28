@@ -17,6 +17,11 @@ spring:
     secret: "n8C2oYhsr3T8X4w7O4s0+8zv6LhXfwI6Dp7wM8Fr9uR6nBYaVcyt9NLXkHTyDkKw"
     expiration-ms: 3600000 # 1 hour
 
+app: # 👈 custom block, not under spring
+  base-url: http://localhost:8080
+  file-storage:
+    location: ${user.home}/dog-health-tracker/uploads
+
 hormone:
   quiz:
     questions:
@@ -55,4 +60,44 @@ hormone:
       - id: q9
         category: pancreatic
         text: "Has your dog had unexplained digestive issues (vomiting, diarrhea)?"
+        options: [ Always, Frequently, Occasionally, Never ]
+
+mobility:
+  quiz:
+    questions:
+      - id: q1
+        category: luxation
+        text: "Does your dog occasionally skip or limp on one of its hind legs?"
+        options: [ Always, Frequently, Occasionally, Never ]
+      - id: q2
+        category: luxation
+        text: "Does your dog struggle to jump or climb stairs?"
+        options: [ Always, Frequently, Occasionally, Never ]
+      - id: q3
+        category: luxation
+        text: "Do you notice your dog’s knee 'popping' or locking sometimes?"
+        options: [ Always, Frequently, Occasionally, Never ]
+      - id: q4
+        category: dysplasia
+        text: "Does your dog have difficulty rising from a lying position?"
+        options: [ Always, Frequently, Occasionally, Never ]
+      - id: q5
+        category: dysplasia
+        text: "Does your dog appear less active or reluctant to exercise?"
+        options: [ Always, Frequently, Occasionally, Never ]
+      - id: q6
+        category: dysplasia
+        text: "Do you notice a swaying or bunny-hopping when your dog runs?"
+        options: [ Always, Frequently, Occasionally, Never ]
+      - id: q7
+        category: arthritis
+        text: "Does your dog seem stiff or sore in the mornings or after resting?"
+        options: [ Always, Frequently, Occasionally, Never ]
+      - id: q8
+        category: arthritis
+        text: "Does your dog avoid jumping, running, or climbing stairs?"
+        options: [ Always, Frequently, Occasionally, Never ]
+      - id: q9
+        category: arthritis
+        text: "Do you notice swelling or heat in your dog’s joints?"
         options: [ Always, Frequently, Occasionally, Never ]

@@ -1,6 +1,5 @@
 package com.york.doghealthtracker.repository;
 
-import com.york.doghealthtracker.entity.DentalEntity;
 import com.york.doghealthtracker.entity.HeartEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 

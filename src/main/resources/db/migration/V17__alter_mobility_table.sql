@@ -1,0 +1,27 @@
+DROP TABLE IF EXISTS MOBILITY;
+
+CREATE TABLE MOBILITY
+(
+    MB_ID VARCHAR(36) CONSTRAINT NN_HM_ID NOT NULL,
+    MB_DOG_ID VARCHAR(36) CONSTRAINT NN_HORMONE_DOG_ID NOT NULL,
+    MB_TYPE VARCHAR(32) CONSTRAINT NN_TYPE NOT NULL,
+    MB_STATUS VARCHAR(8) CONSTRAINT NN_STATUS NOT NULL,
+    MB_CREATED_TS TIMESTAMP(6) CONSTRAINT NN_CREATED_TS NOT NULL
+);
+
+ALTER TABLE MOBILITY
+    ADD CONSTRAINT PK_MOBILITY_ID
+        PRIMARY KEY (MB_ID);
+
+ALTER TABLE MOBILITY
+    ADD CONSTRAINT FK_MOBILITY_DOG
+        FOREIGN KEY (MB_DOG_ID)
+            REFERENCES DOG (DOG_ID);
+
+COMMENT ON TABLE MOBILITY IS 'This table stores MOBILITY quiz results for a given dog.';
+
+COMMENT ON COLUMN MOBILITY.MB_ID IS 'The unique identifier for the mobility status record.';
+COMMENT ON COLUMN MOBILITY.MB_DOG_ID IS 'The ID of the dog the mobility entry belongs to.';
+COMMENT ON COLUMN MOBILITY.MB_TYPE IS 'The type of mobility group (patellar luxation, hip dysplasia, arthritis).';
+COMMENT ON COLUMN MOBILITY.MB_STATUS IS 'The calculated status from quiz answers (green, yellow, red).';
+COMMENT ON COLUMN MOBILITY.MB_CREATED_TS IS 'The timestamp when this hormone record was created.';

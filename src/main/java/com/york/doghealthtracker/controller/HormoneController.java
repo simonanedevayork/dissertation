@@ -2,11 +2,10 @@ package com.york.doghealthtracker.controller;
 
 import com.york.doghealthtracker.api.HormonesApi;
 import com.york.doghealthtracker.entity.DogEntity;
-import com.york.doghealthtracker.entity.UserEntity;
 import com.york.doghealthtracker.model.HormoneQuestion;
 import com.york.doghealthtracker.model.HormoneStatusResponse;
 import com.york.doghealthtracker.model.QuizAnswer;
-import com.york.doghealthtracker.service.HormonesService;
+import com.york.doghealthtracker.service.HormoneService;
 import com.york.doghealthtracker.service.utils.UserContextService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,12 +14,12 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-public class HormonesController implements HormonesApi {
+public class HormoneController implements HormonesApi {
 
     private final UserContextService userContextService;
-    private final HormonesService hormonesService;
+    private final HormoneService hormonesService;
 
-    public HormonesController(UserContextService userContextService, HormonesService hormonesService) {
+    public HormoneController(UserContextService userContextService, HormoneService hormonesService) {
         this.userContextService = userContextService;
         this.hormonesService = hormonesService;
     }
