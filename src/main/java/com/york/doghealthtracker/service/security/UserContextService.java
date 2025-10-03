@@ -1,4 +1,4 @@
-package com.york.doghealthtracker.service.utils;
+package com.york.doghealthtracker.service.security;
 
 import com.york.doghealthtracker.entity.DogEntity;
 import com.york.doghealthtracker.entity.UserEntity;

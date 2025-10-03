@@ -8,4 +8,5 @@ import java.util.Optional;
 
 public interface DogRepository extends JpaRepository<DogEntity, String> {
     Optional<DogEntity> findByOwnerId(String participantId);
+    Boolean existsByIdAndOwner_Id(String dogId, String participantId);
 }

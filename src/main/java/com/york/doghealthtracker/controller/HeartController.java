@@ -26,7 +26,7 @@ public class HeartController implements HeartApi {
     }
 
     @Override
-    public ResponseEntity<List<HeartResponse>> getHeartResponse(String dogId) {
+    public ResponseEntity<List<HeartResponse>> getHeartRecords(String dogId) {
         List<HeartResponse> heartStatuses = heartService.getHeartStatuses(dogId);
         return ResponseEntity.ok(heartStatuses);
     }

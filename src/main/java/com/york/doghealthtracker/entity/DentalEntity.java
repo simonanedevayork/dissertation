@@ -40,9 +40,6 @@ public class DentalEntity {
     @Column(name = "dl_last_cleaning_date")
     private LocalDate lastCleaningDate;
 
-    @Column(name = "dl_severity_score")
-    private Integer severityScore;
-
     @Column(name = "dl_created_ts")
     private LocalDateTime createdTs;
 }

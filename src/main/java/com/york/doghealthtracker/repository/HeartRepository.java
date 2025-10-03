@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface HeartRepository extends JpaRepository<HeartEntity, String> {
     List<HeartEntity> findByDog_Id(String dogId);
+    Boolean existsByIdAndDog_Id(String id, String dogId);
 }

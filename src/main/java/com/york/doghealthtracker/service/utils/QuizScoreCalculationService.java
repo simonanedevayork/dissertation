@@ -1,15 +1,8 @@
 package com.york.doghealthtracker.service.utils;
 
-import com.york.doghealthtracker.config.HormoneQuizConfig;
-import com.york.doghealthtracker.model.MobilityCategory;
 import com.york.doghealthtracker.model.QuizAnswer;
 import com.york.doghealthtracker.model.QuizCategoryStatus;
 import lombok.experimental.UtilityClass;
-
-import java.util.List;
-import java.util.Map;
-
-import static com.york.doghealthtracker.model.QuizAnswer.*;
 
 @UtilityClass
 public class QuizScoreCalculationService {

@@ -53,7 +53,6 @@ public class SecurityConfig {
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
-        // AuthenticationConfiguration will pick up the DaoAuthenticationProvider bean
         return config.getAuthenticationManager();
     }
 }

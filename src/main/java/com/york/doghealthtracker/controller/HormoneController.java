@@ -6,7 +6,7 @@ import com.york.doghealthtracker.model.HormoneQuestion;
 import com.york.doghealthtracker.model.HormoneStatusResponse;
 import com.york.doghealthtracker.model.QuizAnswer;
 import com.york.doghealthtracker.service.HormoneService;
-import com.york.doghealthtracker.service.utils.UserContextService;
+import com.york.doghealthtracker.service.security.UserContextService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -35,7 +35,7 @@ public class HormoneController implements HormonesApi {
 
         DogEntity dog = userContextService.getDogInContext();
 
-        hormonesService.calculateQuizStatus(requestBody, dog);
+        hormonesService.calculateQuizScore(dog, requestBody);
         return ResponseEntity.status(201).build();
     }
 
@@ -44,7 +44,7 @@ public class HormoneController implements HormonesApi {
 
         DogEntity dog = userContextService.getDogInContext();
 
-        HormoneStatusResponse status = hormonesService.getHormoneStatusResponse(dog);
+        HormoneStatusResponse status = hormonesService.getHormoneStatusResponse(dog.getId());
         return ResponseEntity.ok(status);
     }
 }

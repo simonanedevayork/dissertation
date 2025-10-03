@@ -4,7 +4,7 @@ import com.york.doghealthtracker.api.MobilityApi;
 import com.york.doghealthtracker.entity.DogEntity;
 import com.york.doghealthtracker.model.*;
 import com.york.doghealthtracker.service.MobilityService;
-import com.york.doghealthtracker.service.utils.UserContextService;
+import com.york.doghealthtracker.service.security.UserContextService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -32,7 +32,7 @@ public class MobilityController implements MobilityApi {
     public ResponseEntity<Void> submitMobilityQuiz(Map<String, QuizAnswer> requestBody) {
         DogEntity dog = userContextService.getDogInContext();
 
-        mobilityService.calculateQuizStatus(requestBody, dog);
+        mobilityService.calculateQuizStatus(dog, requestBody);
         return ResponseEntity.status(201).build();
     }
 
@@ -40,7 +40,7 @@ public class MobilityController implements MobilityApi {
     public ResponseEntity<MobilityStatusResponse> getMobilityStatus() {
         DogEntity dog = userContextService.getDogInContext();
 
-        MobilityStatusResponse status = mobilityService.getMobilityStatusResponse(dog);
+        MobilityStatusResponse status = mobilityService.getMobilityStatusResponse(dog.getId());
         return ResponseEntity.ok(status);
     }
 

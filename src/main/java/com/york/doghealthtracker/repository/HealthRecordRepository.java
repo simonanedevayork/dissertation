@@ -11,4 +11,5 @@ public interface HealthRecordRepository extends JpaRepository<HealthRecordEntity
     List<HealthRecordEntity> findByDog_Id(String dogId);
     @NotNull
     Optional<HealthRecordEntity> findById(@NotNull String id);
+    Boolean existsByIdAndDog_Id(String healthRecordId, String dogId);
 }
