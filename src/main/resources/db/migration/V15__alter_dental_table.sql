@@ -1,5 +1,0 @@
-ALTER TABLE dental
-    ALTER COLUMN dl_id TYPE VARCHAR(36);
-
-ALTER TABLE dental
-    ALTER COLUMN dl_dog_id TYPE VARCHAR(36);

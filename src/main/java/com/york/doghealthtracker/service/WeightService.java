@@ -21,7 +21,6 @@ import java.util.Optional;
  */
 @Service
 public class WeightService {
-
     private final WeightRepository weightRepository;
     private final DogRepository dogRepository;
 
@@ -61,6 +60,16 @@ public class WeightService {
         return weightRepository.findByDogId(dogId).stream()
                 .map(this::mapToResponse)
                 .toList();
+    }
+
+    /**
+     * Retrieves the most recent weight entity from the database.
+     *
+     * @return Optional of WeightEntity representing the most recent weight added, or empty optional if no such value is
+     * present.
+     */
+    public Optional<WeightEntity> getCurrentWeightEntity(String dogId) {
+        return weightRepository.findTopByDog_IdOrderByCreatedTsDesc(dogId);
     }
 
     /**

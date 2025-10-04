@@ -110,6 +110,30 @@ paths:
         '401':
           description: Unauthorized (invalid or missing token)
 
+  /users/{participant-id}/dashboard:
+    get:
+      summary: Get the dashboard overview for a given participant
+      operationId: getDashboardByParticipantId
+      tags:
+        - Users
+      parameters:
+        - name: participant-id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: GET operation was successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DashboardResponse'
+        '404':
+          description: User not found
+        '401':
+          description: Unauthorized (invalid or missing token)
+
   /dogs:
     post:
       summary: Add a new dog
@@ -870,6 +894,36 @@ components:
         - email
         - password
 
+    HealthHighlight:
+      type: object
+      description: The health highlight.
+      properties:
+        title:
+          type: string
+          example: Hearth condition risk
+        description:
+          type: string
+          example: Fatigue can indicate an underlying heart issue.
+        advice:
+          type: string
+          example: Book a cardiologist.
+
+    QuizHighlight:
+      type: object
+      description: The quiz highlight.
+      properties:
+        title:
+          type: string
+          example: Hormonal Quiz
+        description:
+          type: string
+          example: Answer 10 simple questions to help estimate your dog’s hormonal health by identifying signs related to the three most common hormonal issues.
+        link:
+          type: string
+          format: uri
+          description: "URL pointing to the quiz"
+          example: "/hormones/quiz"
+
     # ======================
     # DOG COMPONENTS
     # ======================
@@ -917,6 +971,36 @@ components:
             ownerId:
               type: string
               example: "user-456"
+
+    DashboardResponse:
+      type: object
+      description: Dashboard object.
+      properties:
+        overallHealthIndex:
+          type: number
+          format: integer
+          description: The number representing the overall health index.
+          example: 7
+        currentWeight:
+          type: number
+          format: float
+          description: The current weight of the dog.
+          example: 3.5
+        yourProgress:
+          type: number
+          format: float
+          description: Percentage value representing the profile progress.
+          example: 75
+          minimum: 0
+          maximum: 100
+        healthHighlights:
+          type: array
+          items:
+            $ref: '#/components/schemas/HealthHighlight'
+        quizHighlights:
+          type: array
+          items:
+            $ref: '#/components/schemas/QuizHighlight'
 
     # ======================
     # WEIGHT COMPONENTS

@@ -1,6 +1,7 @@
 package com.york.doghealthtracker.service;
 
 import com.york.doghealthtracker.entity.UserEntity;
+import com.york.doghealthtracker.model.DashboardResponse;
 import com.york.doghealthtracker.model.UserResponse;
 import com.york.doghealthtracker.model.UserUpdateRequest;
 import com.york.doghealthtracker.repository.UserRepository;
@@ -22,10 +23,12 @@ public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final UserDashboardService userDashboardService;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, UserDashboardService userDashboardService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.userDashboardService = userDashboardService;
     }
 
     /**
@@ -67,6 +70,18 @@ public class UserService implements UserDetailsService {
             return true;
         }
         return false;
+    }
+
+    /**
+     * Retrieves user dashboard for given user.
+     *
+     * @param userId The id of the user to retrieve dashboard for.
+     * @param dogId The id of the dog related to the user.
+     * @return DashboardResponse object containing the user dashboard data.
+     */
+    public DashboardResponse getUserDashboard(String userId, String dogId) {
+        log.info("Requesting dashboard information for user with id: {}", userId);
+        return userDashboardService.getDashboard(userId, dogId);
     }
 
     /**

@@ -1,8 +1,0 @@
-ALTER TABLE heart
-    ALTER COLUMN ht_id TYPE VARCHAR(36);
-
-ALTER TABLE heart
-    ALTER COLUMN ht_dog_id TYPE VARCHAR(36);
-
-ALTER TABLE heart
-    ALTER COLUMN ht_murmurs TYPE VARCHAR(20);
