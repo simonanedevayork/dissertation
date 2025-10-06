@@ -2,6 +2,18 @@ spring:
   application:
     name: doghealthtracker
 
+  mail:
+    host: sandbox.smtp.mailtrap.io
+    port: 2525
+    username: e76487ba665ab7
+    password: 9614ac2043047e
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
   datasource:
     url: jdbc:postgresql://localhost:5432/postgres
     username: simonanedeva

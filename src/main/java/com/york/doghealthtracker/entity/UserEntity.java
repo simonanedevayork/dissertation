@@ -16,17 +16,23 @@ public class UserEntity {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
-    @Column(name = "pd_email", unique = true, nullable = false)
+    @Column(name = "pd_email")
     private String email;
 
-    @Column(name = "pd_password", nullable = false)
+    @Column(name = "pd_password")
     private String password;
 
-    @Column(name = "pd_role", nullable = false)
+    @Column(name = "pd_role")
     private String role = "USER";
 
-    @Column(name = "pd_creation_ts", updatable = false)
+    @Column(name = "pd_creation_ts")
     private Instant creationTimestamp;
+
+    @Column(name = "pd_reset_token")
+    private String resetToken;
+
+    @Column(name = "pd_reset_token_expiration")
+    private Instant resetTokenExpiration;
 
     @PrePersist
     protected void onCreate() {

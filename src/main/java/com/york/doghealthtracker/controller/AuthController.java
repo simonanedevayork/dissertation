@@ -32,4 +32,20 @@ public class AuthController {
         authService.register(user);
         return ResponseEntity.ok().build();
     }
+
+    //TODO: make DTO for the objects
+
+    @PostMapping("/forgot-password")
+    public ResponseEntity<String> forgotPassword(@RequestParam String email) {
+        authService.sendPasswordResetEmail(email);
+        return ResponseEntity.ok("Password reset email sent successfully.");
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<String> resetPassword(@RequestParam String token, @RequestParam String newPassword) {
+        log.info("Received password reset using token: {}", token);
+        authService.resetPassword(token, newPassword);
+        return ResponseEntity.ok("Password has been reset successfully.");
+    }
+
 }
