@@ -1,13 +1,21 @@
 package com.york.doghealthtracker.controller;
 
 import com.york.doghealthtracker.entity.UserEntity;
+import com.york.doghealthtracker.security.payload.ForgotPasswordRequest;
 import com.york.doghealthtracker.security.payload.JwtResponse;
 import com.york.doghealthtracker.security.payload.LoginRequest;
+import com.york.doghealthtracker.security.payload.ResetPasswordRequest;
 import com.york.doghealthtracker.service.AuthService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * Authentication controller.
+ * Implemented manually rather than through OpenAPI interface generation, due to the following reasons:
+ * - authentication endpoints require close integration with Spring Security’s internal mechanisms
+ * - authentication endpoints handle sensitive authentication logic which is not directly tied to the business entities
+ */
 @RestController
 @RequestMapping("/auth")
 @Slf4j
@@ -33,19 +41,16 @@ public class AuthController {
         return ResponseEntity.ok().build();
     }
 
-    //TODO: make DTO for the objects
-
     @PostMapping("/forgot-password")
-    public ResponseEntity<String> forgotPassword(@RequestParam String email) {
-        authService.sendPasswordResetEmail(email);
-        return ResponseEntity.ok("Password reset email sent successfully.");
+    public ResponseEntity<String> forgotPassword(@RequestBody ForgotPasswordRequest request) {
+        authService.sendPasswordResetEmail(request.getEmail());
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/reset-password")
-    public ResponseEntity<String> resetPassword(@RequestParam String token, @RequestParam String newPassword) {
-        log.info("Received password reset using token: {}", token);
-        authService.resetPassword(token, newPassword);
-        return ResponseEntity.ok("Password has been reset successfully.");
+    public ResponseEntity<String> resetPassword(@RequestBody ResetPasswordRequest request) {
+        authService.resetPassword(request.getToken(), request.getNewPassword());
+        return ResponseEntity.ok().build();
     }
 
 }
