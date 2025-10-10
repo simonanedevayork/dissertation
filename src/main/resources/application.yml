@@ -2,6 +2,12 @@ spring:
   application:
     name: doghealthtracker
 
+# handle file upload size
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 15MB
+
   mail:
     host: sandbox.smtp.mailtrap.io
     port: 2525
@@ -113,3 +119,75 @@ mobility:
         category: arthritis
         text: "Do you notice swelling or heat in your dog’s joints?"
         options: [ Always, Frequently, Occasionally, Never ]
+
+dog:
+  goalWeightRanges:
+    Labrador Retriever:
+      min: 25.0
+      max: 36.0
+    German Shepherd:
+      min: 22.0
+      max: 40.0
+    Golden Retriever:
+      min: 25.0
+      max: 34.0
+    Bulldog:
+      min: 18.0
+      max: 25.0
+    Poodle:
+      min: 20.0
+      max: 32.0
+    Beagle:
+      min: 9.0
+      max: 13.0
+    Rottweiler:
+      min: 35.0
+      max: 60.0
+    Dachshund:
+      min: 7.0
+      max: 15.0
+    Boxer:
+      min: 25.0
+      max: 32.0
+    Siberian Husky:
+      min: 16.0
+      max: 27.0
+    Chihuahua:
+      min: 1.5
+      max: 3.0
+    Yorkshire Terrier:
+      min: 2.0
+      max: 3.5
+    Doberman Pinscher:
+      min: 30.0
+      max: 45.0
+    Border Collie:
+      min: 12.0
+      max: 20.0
+    Great Dane:
+      min: 45.0
+      max: 90.0
+    Shih Tzu:
+      min: 4.0
+      max: 7.5
+    Pomeranian:
+      min: 1.5
+      max: 3.5
+    Cocker Spaniel:
+      min: 12.0
+      max: 16.0
+    Australian Shepherd:
+      min: 18.0
+      max: 30.0
+    French Bulldog:
+      min: 9.0
+      max: 14.0
+    Maltese:
+      min: 3.0
+      max: 4.5
+    Cavalier King Charles Spaniel:
+      min: 5.5
+      max: 8.0
+    Unidentified:
+      min: 0.0
+      max: 0.0

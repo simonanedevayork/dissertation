@@ -1,17 +1,20 @@
 package com.york.doghealthtracker.service;
 
+import com.york.doghealthtracker.config.DogConfig;
+import com.york.doghealthtracker.entity.DogEntity;
 import com.york.doghealthtracker.entity.WeightEntity;
-import com.york.doghealthtracker.model.WeightRequest;
-import com.york.doghealthtracker.model.WeightResponse;
+import com.york.doghealthtracker.exception.InvalidDogException;
+import com.york.doghealthtracker.model.*;
 import com.york.doghealthtracker.repository.DogRepository;
 import com.york.doghealthtracker.repository.WeightRepository;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -23,10 +26,12 @@ import java.util.Optional;
 public class WeightService {
     private final WeightRepository weightRepository;
     private final DogRepository dogRepository;
+    private final DogConfig dogConfig;
 
-    public WeightService(WeightRepository weightRepository, DogRepository dogRepository) {
+    public WeightService(WeightRepository weightRepository, DogRepository dogRepository, DogConfig dogConfig) {
         this.weightRepository = weightRepository;
         this.dogRepository = dogRepository;
+        this.dogConfig = dogConfig;
     }
 
     /**
@@ -34,7 +39,7 @@ public class WeightService {
      *
      * @param dogId   The dog to add a dental status for.
      * @param request The dental status request.
-     * @returnan Optional object of WeightResponse containing the saved object, or an empty Optional in case of an
+     * @return an Optional object of WeightResponse containing the saved object, or an empty Optional in case of an
      * error.
      */
     @PreAuthorize("@authorizationService.hasDogOwnership(#dogId)")
@@ -57,9 +62,87 @@ public class WeightService {
      */
     @PreAuthorize("@authorizationService.hasDogOwnership(#dogId)")
     public List<WeightResponse> getWeights(String dogId) {
-        return weightRepository.findByDogId(dogId).stream()
-                .map(this::mapToResponse)
-                .toList();
+
+        Optional<DogEntity> dogOpt = dogRepository.findById(dogId);
+
+        if (dogOpt.isPresent()) {
+
+            String breed = dogOpt.get().getBreed();
+            Map<String, Float> range = getWeightRangeForBreed(breed);
+
+            return weightRepository.findByDogId(dogId).stream()
+                    .map(this::mapToResponse)
+                    .map(weightResponse -> weightResponse
+                            .goalWeightRange(mapToGoalWeightRange(range))
+                            .healthHighlights(addHealthHighlights(dogId)) //TODO: implement
+                    )
+                    .map(weightResponse -> weightResponse
+                            .status(calculateWeightStatus(weightResponse)))
+                    .toList();
+        } else {
+            throw new InvalidDogException("Invalid dog.");
+        }
+    }
+
+    /**
+     * Retrieves the weight range for a given breed from the application.yml configuration.
+     * @param breed The dog breed to retrieve weight range for.
+     * @return a Map of the min and max strings with their corresponding values.
+     * @throws InvalidDogException if there is no such breed configured.
+     */
+    private Map<String, Float> getWeightRangeForBreed(String breed) {
+        try {
+            return dogConfig.getGoalWeightRanges().get(breed);
+        } catch (RuntimeException e) {
+            throw new InvalidDogException("Invalid dog breed.");
+        }
+    }
+
+    /**
+     * Maps the provided min and max weight range values to a GoalWeightRange object.
+     * @param range The min and max range to map.
+     * @return a GoalWeightRange object with corresponding min and max values.
+     */
+    private GoalWeightRange mapToGoalWeightRange(Map<String, Float> range) {
+        return new GoalWeightRange()
+                .min(range.getOrDefault("min", 0.0f))
+                .max(range.getOrDefault("max", 0.0f));
+    }
+
+    /**
+     * Calculates the health status (RED, GREEN or YELLOW) of the weight entity based on its value compared to a given
+     * range. Allows a 5 percent (0.05) tolerance above and below the given range, which is represented though a YELLOW
+     * category.
+     *
+     * @param weightResponse The weightResponse to analyze the status for.
+     * @return QuizCategoryStatus of color representing the status of the weight
+     */
+    private QuizCategoryStatus calculateWeightStatus(WeightResponse weightResponse) {
+
+        GoalWeightRange range = weightResponse.getGoalWeightRange();
+        float min = range.getMin();
+        float max = range.getMax();
+
+        float currentWeight = weightResponse.getCurrent();
+
+        float tolerance = 0.05f * (max - min);
+        float lowerBound = min - tolerance;
+        float upperBound = max + tolerance;
+
+        if (currentWeight >= min && currentWeight <= max) {
+            return QuizCategoryStatus.GREEN;
+        } else if (currentWeight >= lowerBound && currentWeight <= upperBound) {
+            return QuizCategoryStatus.YELLOW;
+        } else {
+            return QuizCategoryStatus.RED;
+        }
+    }
+
+    private List<HealthHighlight> addHealthHighlights(String dogId) {
+        // calculate the highlights
+
+        //TODO: implement
+        return Collections.emptyList();
     }
 
     /**
@@ -100,7 +183,6 @@ public class WeightService {
 
         WeightResponse resp = new WeightResponse();
         resp.setId(entity.getId());
-        resp.setDogId(entity.getDog().getId());
         resp.setCurrent(entity.getCurrent());
         resp.setDate(entity.getCreatedTs().atOffset(ZoneOffset.UTC));
         return resp;

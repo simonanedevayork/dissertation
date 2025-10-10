@@ -143,7 +143,7 @@ paths:
       requestBody:
         required: true
         content:
-          application/json:
+          multipart/form-data:
             schema:
               $ref: '#/components/schemas/DogRequest'
       responses:
@@ -197,7 +197,7 @@ paths:
       requestBody:
         required: true
         content:
-          application/json:
+          multipart/form-data:
             schema:
               $ref: '#/components/schemas/DogRequest'
       responses:
@@ -658,7 +658,7 @@ paths:
         - Mobility
       responses:
         '200':
-          description: Mobility status per group
+          description: Mobility status per group and health highlights.
           content:
             application/json:
               schema:
@@ -935,8 +935,7 @@ components:
           type: string
           example: "Buddy"
         gender:
-          type: string
-          example: "Male"
+          $ref: '#/components/schemas/Gender'
         breed:
           type: string
           example: "Golden Retriever"
@@ -944,11 +943,10 @@ components:
           type: string
           format: date
           example: "2020-05-15"
-        photoUrl:
+        file:
           type: string
-          format: uri
-          description: "URL pointing to the dog’s photo"
-          example: "https://cloud.example.com/dogs/dog123.jpg"
+          format: binary
+          description: File to upload (PDF, DOC, JPG, etc.)
         isNeutered:
           type: boolean
           example: true
@@ -960,17 +958,34 @@ components:
         - isNeutered
 
     DogResponse:
-      allOf:
-        - $ref: '#/components/schemas/DogRequest'
-        - type: object
-          description: The dog object.
-          properties:
-            dogId:
-              type: string
-              example: "dog-123"
-            ownerId:
-              type: string
-              example: "user-456"
+      type: object
+      description: Dog object used to return a dog.
+      properties:
+        dogId:
+          type: string
+          example: "dog-123"
+        ownerId:
+          type: string
+          example: "user-456"
+        name:
+          type: string
+          example: "Buddy"
+        gender:
+          $ref: '#/components/schemas/Gender'
+        breed:
+          type: string
+          example: "Golden Retriever"
+        birthDate:
+          type: string
+          format: date
+          example: "2020-05-15"
+        photoUrl:
+          type: string
+          format: uri
+          example: "https://example.com/example.jpg"
+        isNeutered:
+          type: boolean
+          example: true
 
     DashboardResponse:
       type: object
@@ -1002,6 +1017,11 @@ components:
           items:
             $ref: '#/components/schemas/QuizHighlight'
 
+    Gender:
+      type: string
+      enum: [ male, female ]
+      example: male
+
     # ======================
     # WEIGHT COMPONENTS
     # ======================
@@ -1026,10 +1046,31 @@ components:
           properties:
             id:
               type: string
-              example: "wg-123"
-            dogId:
-              type: string
-              example: "dog-123"
+              example: "12345"
+            goalWeightRange:
+              $ref: '#/components/schemas/GoalWeightRange'
+            status:
+              $ref: '#/components/schemas/QuizCategoryStatus'
+            healthHighlights:
+              type: array
+              description: List of relevant health insights related to weight.
+              items:
+                $ref: '#/components/schemas/HealthHighlight'
+
+    GoalWeightRange:
+      type: object
+      description: The ideal weight range for a specific dog breed.
+      properties:
+        min:
+          type: number
+          format: float
+          description: The minimum healthy weight (kg).
+          example: 10.5
+        max:
+          type: number
+          format: float
+          description: The maximum healthy weight (kg).
+          example: 15.0
 
     # ======================
     # HORMONE COMPONENTS
@@ -1117,6 +1158,10 @@ components:
           $ref: '#/components/schemas/QuizCategoryStatus'
         arthritis:
           $ref: '#/components/schemas/QuizCategoryStatus'
+        healthHighlights:
+          type: array
+          items:
+            $ref: '#/components/schemas/HealthHighlight'
 
     MobilityCategory:
       type: string

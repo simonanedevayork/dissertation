@@ -1,5 +1,6 @@
 package com.york.doghealthtracker.entity;
 
+import com.york.doghealthtracker.model.Gender;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -28,7 +29,7 @@ public class DogEntity {
     private String breed;
 
     @Column(name = "dog_gender")
-    private String gender;
+    private Gender gender;
 
     @Column(name = "dog_birth_date")
     private LocalDate birthDate;

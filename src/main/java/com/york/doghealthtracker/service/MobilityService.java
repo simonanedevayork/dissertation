@@ -12,6 +12,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -127,6 +128,9 @@ public class MobilityService {
                 case ARTHRITIS -> response.setArthritis(entity.getStatus());
             }
         }
+
+        //TODO: calculate the highlights
+        response.setHealthHighlights(Collections.emptyList());
 
         return response;
     }
