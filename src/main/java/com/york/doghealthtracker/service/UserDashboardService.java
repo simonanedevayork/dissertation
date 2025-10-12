@@ -3,11 +3,13 @@ package com.york.doghealthtracker.service;
 import com.york.doghealthtracker.entity.WeightEntity;
 import com.york.doghealthtracker.model.DashboardResponse;
 import com.york.doghealthtracker.model.HealthHighlight;
-import com.york.doghealthtracker.model.QuizHighlight;
+import com.york.doghealthtracker.model.HormoneStatusResponse;
+import com.york.doghealthtracker.model.MobilityStatusResponse;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -15,23 +17,29 @@ import java.util.List;
 public class UserDashboardService {
 
     private final WeightService weightService;
+    private final HormoneService hormoneService;
+    private final MobilityService mobilityService;
+    private final DentalService dentalService;
+    private final HeartService heartService;
+    private final HealthRecordService healthRecordService;
 
-    public UserDashboardService(WeightService weightService) {
+    public UserDashboardService(WeightService weightService, HormoneService hormoneService, MobilityService mobilityService, DentalService dentalService, HeartService heartService, HealthRecordService healthRecordService) {
         this.weightService = weightService;
+        this.hormoneService = hormoneService;
+        this.mobilityService = mobilityService;
+        this.dentalService = dentalService;
+        this.heartService = heartService;
+        this.healthRecordService = healthRecordService;
     }
 
     public DashboardResponse getDashboard(String userId, String dogId) {
         return new DashboardResponse()
-                .overallHealthIndex(calculateOverallHealthIndex())
                 .currentWeight(getCurrentWeight(dogId))
-                .yourProgress(calculateProgress())
-                .healthHighlights(generateHealthHighlights())
-                .quizHighlights(getQuizHighlights());
-    }
-
-    private BigDecimal calculateOverallHealthIndex() {
-
-        return null;
+                .hormonesStatus(getHormonesStatus(dogId))
+                .mobilityStatus(getMobilityStatus(dogId))
+                .totalDentalRecords(getTotalDentalRecords(dogId))
+                .totalHeartRecords(getTotalHealthRecords(dogId))
+                .healthHighlights(generateHealthHighlights());
     }
 
     /**
@@ -46,16 +54,34 @@ public class UserDashboardService {
                 .orElse(0.00f);
     }
 
-    private Float calculateProgress() {
-        return null;
+    public HormoneStatusResponse getHormonesStatus(String dogId) {
+        return hormoneService.getHormoneStatusResponse(dogId);
+    }
+
+    public MobilityStatusResponse getMobilityStatus(String dogId) {
+        return mobilityService.getMobilityStatusResponse(dogId);
+    }
+
+    public BigDecimal getTotalDentalRecords(String dogId) {
+        return BigDecimal.valueOf(
+                dentalService.getDentalListResponse(dogId).getDentalRecords().size()
+        );
+    }
+
+    public BigDecimal getTotalHeartRecords(String dogId) {
+        return BigDecimal.valueOf(
+                heartService.getHeartStatuses(dogId).size()
+        );
+    }
+
+    public BigDecimal getTotalHealthRecords(String dogId) {
+        return BigDecimal.valueOf(
+                healthRecordService.getHealthRecords(dogId).size()
+        );
     }
 
     private List<HealthHighlight> generateHealthHighlights() {
-        return null;
-    }
-
-    private List<QuizHighlight> getQuizHighlights() {
-        return null;
+        return Collections.emptyList();
     }
 
 }

@@ -1,19 +1,19 @@
 package com.york.doghealthtracker.service;
 
+import com.york.doghealthtracker.config.HighlightConfig;
 import com.york.doghealthtracker.entity.DentalEntity;
 import com.york.doghealthtracker.entity.DogEntity;
-import com.york.doghealthtracker.model.DentalRequest;
-import com.york.doghealthtracker.model.DentalResponse;
+import com.york.doghealthtracker.model.*;
 import com.york.doghealthtracker.repository.DentalRepository;
 import com.york.doghealthtracker.repository.DogRepository;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -27,10 +27,12 @@ public class DentalService {
 
     private final DentalRepository dentalRepository;
     private final DogRepository dogRepository;
+    private final HighlightConfig highlightConfig;
 
-    public DentalService(DentalRepository dentalRepository, DogRepository dogRepository) {
+    public DentalService(DentalRepository dentalRepository, DogRepository dogRepository, HighlightConfig highlightConfig) {
         this.dentalRepository = dentalRepository;
         this.dogRepository = dogRepository;
+        this.highlightConfig = highlightConfig;
     }
 
     /**
@@ -68,11 +70,108 @@ public class DentalService {
      * @return a list of DentalResponse containing all dental statuses for the given dog.
      */
     @PreAuthorize("@authorizationService.hasDogOwnership(#dogId)")
-    public List<DentalResponse> getDentalStatuses(String dogId) {
-        return dentalRepository.findByDog_Id(dogId)
-                .stream()
-                .map(this::mapToDentalResponse)
-                .collect(Collectors.toList());
+    public DentalListResponse getDentalListResponse(String dogId) {
+
+        List<DentalEntity> dentalEntityList = dentalRepository.findByDog_Id(dogId);
+
+        return new DentalListResponse()
+                .dentalRecords(dentalEntityList.stream()
+                        .map(this::mapToDentalResponse)
+                        .map(dentalResponse -> dentalResponse
+                                .status(calculateDentalStatus(dentalResponse)))
+                        .collect(Collectors.toList()))
+                .healthHighlights(getDentalHealthHighlights(dentalEntityList));
+    }
+
+    private QuizCategoryStatus calculateDentalStatus(DentalResponse dentalResponse) {
+        int totalMetrics = 0;
+        int healthyCount = 0;
+
+        if (dentalResponse.getPlaqueStatus() != null) {
+            totalMetrics++;
+            PlaqueStatus plaque = dentalResponse.getPlaqueStatus();
+            if (plaque == PlaqueStatus.NORM || plaque == PlaqueStatus.LO) {
+                healthyCount++;
+            }
+        }
+
+        if (dentalResponse.getToothLoss() != null) {
+            totalMetrics++;
+            if (!dentalResponse.getToothLoss()) {
+                healthyCount++;
+            }
+        }
+
+        if (dentalResponse.getGingivitisStatus() != null) {
+            totalMetrics++;
+            GingivitisStatus gum = dentalResponse.getGingivitisStatus();
+            if (gum == GingivitisStatus.NONE) {
+                healthyCount++;
+            } else if (gum == GingivitisStatus.MILD) {
+                healthyCount += 0.5;
+            }
+        }
+
+        if (dentalResponse.getLastCleaningDate() != null) {
+            totalMetrics++;
+            LocalDate lastCleaning = dentalResponse.getLastCleaningDate();
+            LocalDate oneYearAgo = LocalDate.now().minusMonths(12);
+
+            if (lastCleaning.isAfter(oneYearAgo)) {
+                healthyCount++;
+            }
+        }
+
+        if (totalMetrics == 0) {
+            return QuizCategoryStatus.YELLOW;
+        }
+
+        float ratio = (float) healthyCount / totalMetrics;
+
+        if (ratio >= 0.75f) {
+            return QuizCategoryStatus.GREEN;
+        } else if (ratio >= 0.40f) {
+            return QuizCategoryStatus.YELLOW;
+        } else {
+            return QuizCategoryStatus.RED;
+        }
+    }
+
+    private List<HealthHighlight> getDentalHealthHighlights(List<DentalEntity> dentalEntityList) {
+
+        List<HealthHighlight> healthHighlights = new ArrayList<>();
+
+        DentalEntity latestRecord = dentalEntityList.stream()
+                .max(Comparator.comparing(DentalEntity::getCreatedTs))
+                .orElse(null);
+
+        if (dentalEntityList.stream()
+                .anyMatch(DentalEntity::getToothLoss)) {
+            healthHighlights.add(constructHealthHighlight("toothLoss"));
+        }
+
+        if (latestRecord != null) {
+            if (latestRecord.getLastCleaningDate() != null &&
+                    latestRecord.getLastCleaningDate().isBefore(LocalDate.now().minusMonths(12))) {
+                healthHighlights.add(constructHealthHighlight("overdueCleaning"));
+            }
+
+            if (latestRecord.getPlaqueStatus() != null) {
+                switch (latestRecord.getPlaqueStatus()) {
+                    case HI, NORM -> healthHighlights.add(constructHealthHighlight("highPlaque"));
+                }
+            }
+        }
+
+        if (healthHighlights.isEmpty()) {
+            healthHighlights.add(constructHealthHighlight("dentalDefault"));
+        }
+
+        return healthHighlights;
+    }
+
+    private HealthHighlight constructHealthHighlight(String highlightType) {
+        return highlightConfig.getMap().get(highlightType);
     }
 
     /**

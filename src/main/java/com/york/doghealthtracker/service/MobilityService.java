@@ -1,6 +1,6 @@
 package com.york.doghealthtracker.service;
 
-import com.york.doghealthtracker.config.HormoneQuizConfig;
+import com.york.doghealthtracker.config.HighlightConfig;
 import com.york.doghealthtracker.config.MobilityQuizConfig;
 import com.york.doghealthtracker.entity.DogEntity;
 import com.york.doghealthtracker.entity.MobilityEntity;
@@ -12,7 +12,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -28,10 +28,12 @@ public class MobilityService {
 
     private final MobilityQuizConfig quizConfig;
     private final MobilityRepository mobilityRepository;
+    private final HighlightConfig highlightConfig;
 
-    public MobilityService(MobilityQuizConfig quizConfig, MobilityRepository mobilityRepository) {
+    public MobilityService(MobilityQuizConfig quizConfig, MobilityRepository mobilityRepository, HighlightConfig highlightConfig) {
         this.quizConfig = quizConfig;
         this.mobilityRepository = mobilityRepository;
+        this.highlightConfig = highlightConfig;
     }
 
     /**
@@ -129,11 +131,39 @@ public class MobilityService {
             }
         }
 
-        //TODO: calculate the highlights
-        response.setHealthHighlights(Collections.emptyList());
+        response.setHealthHighlights(getMobilityHealthHighlights(response));
 
         return response;
     }
 
+    private List<HealthHighlight> getMobilityHealthHighlights(MobilityStatusResponse response) {
+
+        List<HealthHighlight> healthHighlights = new ArrayList<>();
+
+        switch (response.getPatellarLuxation()) {
+            case RED -> healthHighlights.add(constructHealthHighlight("luxationHighRisk"));
+            case YELLOW -> healthHighlights.add(constructHealthHighlight("luxationMidRisk"));
+        }
+
+        switch (response.getHipDysplasia()) {
+            case RED -> healthHighlights.add(constructHealthHighlight("dysplasiaHighRisk"));
+            case YELLOW -> healthHighlights.add(constructHealthHighlight("dysplasiaMidRisk"));
+        }
+
+        switch (response.getArthritis()) {
+            case RED -> healthHighlights.add(constructHealthHighlight("arthritisHighRisk"));
+            case YELLOW -> healthHighlights.add(constructHealthHighlight("arthritisMidRisk"));
+        }
+
+        if (healthHighlights.isEmpty()) {
+            healthHighlights.add(constructHealthHighlight("mobilityDefault"));
+        }
+
+        return healthHighlights;
+    }
+
+    private HealthHighlight constructHealthHighlight(String highlightType) {
+        return highlightConfig.getMap().get(highlightType);
+    }
 
 }

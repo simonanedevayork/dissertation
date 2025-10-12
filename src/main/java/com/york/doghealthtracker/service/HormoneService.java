@@ -1,8 +1,10 @@
 package com.york.doghealthtracker.service;
 
+import com.york.doghealthtracker.config.HighlightConfig;
 import com.york.doghealthtracker.config.HormoneQuizConfig;
 import com.york.doghealthtracker.entity.DogEntity;
 import com.york.doghealthtracker.entity.HormoneEntity;
+import com.york.doghealthtracker.exception.ResourceNotFoundException;
 import com.york.doghealthtracker.model.*;
 import com.york.doghealthtracker.repository.HormoneRepository;
 import com.york.doghealthtracker.service.utils.QuizScoreCalculationService;
@@ -11,6 +13,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -26,10 +29,12 @@ public class HormoneService {
 
     private final HormoneQuizConfig quizConfig;
     private final HormoneRepository hormoneRepository;
+    private final HighlightConfig highlightConfig;
 
-    public HormoneService(HormoneQuizConfig quizConfig, HormoneRepository hormoneRepository) {
+    public HormoneService(HormoneQuizConfig quizConfig, HormoneRepository hormoneRepository, HighlightConfig highlightConfig) {
         this.quizConfig = quizConfig;
         this.hormoneRepository = hormoneRepository;
+        this.highlightConfig = highlightConfig;
     }
 
     /**
@@ -52,7 +57,7 @@ public class HormoneService {
      * Utilizes QuizScoreCalculationService for result calculations.
      * Deletes hormone quiz status, if such exists.
      *
-     * @param dog The dog entity to save quiz score for.
+     * @param dog         The dog entity to save quiz score for.
      * @param requestBody The quiz answers to process, calculate status for, and save in database.
      */
     public void calculateQuizScore(DogEntity dog, Map<String, QuizAnswer> requestBody) {
@@ -127,7 +132,39 @@ public class HormoneService {
             }
         }
 
+        response.setHealthHighlights(getHormoneHealthHighlights(response));
+
         return response;
+    }
+
+    private List<HealthHighlight> getHormoneHealthHighlights(HormoneStatusResponse response) {
+
+        List<HealthHighlight> healthHighlights = new ArrayList<>();
+
+        switch (response.getThyroid()) {
+            case RED -> healthHighlights.add(constructHealthHighlight("thyroidHighRisk"));
+            case YELLOW -> healthHighlights.add(constructHealthHighlight("thyroidMidRisk"));
+        }
+
+        switch (response.getAdrenal()) {
+            case RED -> healthHighlights.add(constructHealthHighlight("adrenalHighRisk"));
+            case YELLOW -> healthHighlights.add(constructHealthHighlight("adrenalMidRisk"));
+        }
+
+        switch (response.getPancreatic()) {
+            case RED -> healthHighlights.add(constructHealthHighlight("pancreaticHighRisk"));
+            case YELLOW -> healthHighlights.add(constructHealthHighlight("pancreaticMidRisk"));
+        }
+
+        if (healthHighlights.isEmpty()) {
+            healthHighlights.add(constructHealthHighlight("hormoneDefault"));
+        }
+
+        return healthHighlights;
+    }
+
+    private HealthHighlight constructHealthHighlight(String highlightType) {
+       return highlightConfig.getMap().get(highlightType);
     }
 
 }

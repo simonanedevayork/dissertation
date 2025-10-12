@@ -191,3 +191,98 @@ dog:
     Unidentified:
       min: 0.0
       max: 0.0
+
+highlights:
+  map:
+    # --- Hormone highlights ---
+    thyroidHighRisk:
+      title: "Thyroid condition risk"
+      description: "Your dog shows multiple symptoms of thyroid imbalance."
+      advice: "Book a blood test to evaluate thyroid hormone levels."
+
+    thyroidMidRisk:
+      title: "Possible thyroid imbalance"
+      description: "Some mild thyroid-related symptoms observed."
+      advice: "Monitor your dog’s behavior and repeat assessment later."
+
+    adrenalHighRisk:
+      title: "Adrenal condition risk"
+      description: "Symptoms may indicate hormonal imbalance such as Cushing’s disease."
+      advice: "Schedule an endocrine examination with your veterinarian."
+
+    adrenalMidRisk:
+      title: "Possible adrenal imbalance"
+      description: "Mild adrenal-related signs observed."
+      advice: "Monitor water intake and activity, and reassess if symptoms persist."
+
+    pancreaticHighRisk:
+      title: "Pancreatic condition risk"
+      description: "Possible irregularities in insulin or glucose regulation detected."
+      advice: "Consult a vet for glucose and enzyme testing."
+
+    pancreaticMidRisk:
+      title: "Possible pancreatic imbalance"
+      description: "Some signs of pancreatic sensitivity detected."
+      advice: "Watch your dog’s diet closely and consult a vet if digestion worsens."
+
+    hormoneDefault:
+      title: "No hormonal abnormalities detected"
+      description: "Your dog’s hormonal indicators appear within normal range."
+      advice: "Continue monitoring your dog’s behavior and appetite."
+
+  # --- Mobility highlights ---
+    luxationHighRisk:
+      title: "Patellar Luxation risk"
+      description: "Severe signs of knee joint instability detected."
+      advice: "Consult a vet orthopedic specialist for evaluation and possible surgery."
+
+    luxationMidRisk:
+      title: "Possible Patellar Luxation"
+      description: "Mild knee joint instability or occasional limping noticed."
+      advice: "Monitor your dog's gait and avoid overexertion."
+
+    dysplasiaHighRisk:
+      title: "Hip Dysplasia risk"
+      description: "Strong indicators of hip joint deformation or chronic pain observed."
+      advice: "Book an X-ray examination to assess joint health."
+
+    dysplasiaMidRisk:
+      title: "Possible Hip Dysplasia"
+      description: "Some mobility issues or stiffness detected in hip area."
+      advice: "Provide joint supplements and low-impact exercise."
+
+    arthritisHighRisk:
+      title: "Arthritis risk"
+      description: "Signs of severe joint inflammation and stiffness detected."
+      advice: "Consult your veterinarian about pain management and therapy."
+
+    arthritisMidRisk:
+      title: "Possible Arthritis"
+      description: "Mild stiffness or discomfort in movement detected."
+      advice: "Encourage gentle activity and consider dietary supplements."
+
+    mobilityDefault:
+      title: "No mobility issues detected"
+      description: "Your dog’s mobility appears within healthy range."
+      advice: "Maintain regular walks and balanced exercise routine."
+
+    # --- Dental highlights ---
+    toothLoss:
+      title: "Tooth Loss Detected"
+      description: "Tooth loss is a sign of dental disease and can indicate pain or infection."
+      advice: "Book an appointment with your veterinarian to examine your dog’s oral health."
+
+    overdueCleaning:
+      title: "Dental Cleaning Overdue"
+      description: "Your dog's last dental cleaning was over 12 months ago."
+      advice: "Schedule a professional cleaning to prevent plaque buildup and gum disease."
+
+    highPlaque:
+      title: "Plaque Buildup Detected"
+      description: "Plaque can destroy teeth and cause painful infections if untreated."
+      advice: "Arrange a dental check-up with your vet to clean your dog’s teeth."
+
+    dentalDefault:
+      title: "Good Dental Health"
+      description: "No signs of major dental issues were detected."
+      advice: "Continue regular tooth brushing and schedule annual dental check-ups."

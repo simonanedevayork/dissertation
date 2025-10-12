@@ -372,7 +372,7 @@ paths:
           description: Unauthorized (invalid or missing token)
 
     get:
-      summary: Get all dental records for a dog
+      summary: Get all dental records for a dog and health highlights related to them.
       operationId: getDentalRecords
       tags:
         - Dental
@@ -388,9 +388,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/DentalResponse'
+                $ref: '#/components/schemas/DentalListResponse'
         '404':
           description: Dog not found
         '401':
@@ -908,22 +906,6 @@ components:
           type: string
           example: Book a cardiologist.
 
-    QuizHighlight:
-      type: object
-      description: The quiz highlight.
-      properties:
-        title:
-          type: string
-          example: Hormonal Quiz
-        description:
-          type: string
-          example: Answer 10 simple questions to help estimate your dog’s hormonal health by identifying signs related to the three most common hormonal issues.
-        link:
-          type: string
-          format: uri
-          description: "URL pointing to the quiz"
-          example: "/hormones/quiz"
-
     # ======================
     # DOG COMPONENTS
     # ======================
@@ -991,31 +973,34 @@ components:
       type: object
       description: Dashboard object.
       properties:
-        overallHealthIndex:
-          type: number
-          format: integer
-          description: The number representing the overall health index.
-          example: 7
         currentWeight:
           type: number
           format: float
           description: The current weight of the dog.
           example: 3.5
-        yourProgress:
+        hormonesStatus:
+          $ref: '#/components/schemas/HormoneStatusResponse'
+        mobilityStatus:
+          $ref: '#/components/schemas/MobilityStatusResponse'
+        totalDentalRecords:
           type: number
-          format: float
-          description: Percentage value representing the profile progress.
-          example: 75
-          minimum: 0
-          maximum: 100
+          format: integer
+          description: The total number of dental records for a given dog in the database.
+          example: 3
+        totalHeartRecords:
+          type: number
+          format: integer
+          description: The total number of heart records for a given dog in the database.
+          example: 3
+        totalHealthRecords:
+          type: number
+          format: integer
+          description: The total number of health records for a given dog in the database.
+          example: 3
         healthHighlights:
           type: array
           items:
             $ref: '#/components/schemas/HealthHighlight'
-        quizHighlights:
-          type: array
-          items:
-            $ref: '#/components/schemas/QuizHighlight'
 
     Gender:
       type: string
@@ -1100,6 +1085,10 @@ components:
           $ref: '#/components/schemas/QuizCategoryStatus'
         pancreatic:
           $ref: '#/components/schemas/QuizCategoryStatus'
+        healthHighlights:
+          type: array
+          items:
+            $ref: '#/components/schemas/HealthHighlight'
 
     QuizSubmission:
       type: object
@@ -1196,6 +1185,21 @@ components:
         - toothLoss
         - gingivitisStatus
 
+    DentalListResponse:
+      type: object
+      description: Response containing all dental records for a dog, along with health highlights.
+      properties:
+        dentalRecords:
+          type: array
+          description: List of dental records.
+          items:
+            $ref: '#/components/schemas/DentalResponse'
+        healthHighlights:
+          type: array
+          description: List of relevant dental health highlights for the dog.
+          items:
+            $ref: '#/components/schemas/HealthHighlight'
+
     DentalResponse:
       allOf:
         - $ref: '#/components/schemas/DentalRequest'
@@ -1212,6 +1216,8 @@ components:
               type: string
               format: date-time
               example: "2025-09-20T10:15:30"
+            status:
+              $ref: '#/components/schemas/QuizCategoryStatus'
 
     PlaqueStatus:
       type: string
@@ -1253,11 +1259,6 @@ components:
           type: string
           format: date
           example: "2025-09-01"
-      required:
-        - fatigue
-        - coughing
-        - heartRate
-        - breathingRate
 
     HeartResponse:
       allOf:
@@ -1275,6 +1276,12 @@ components:
               type: string
               format: date-time
               example: "2025-09-20T10:15:30"
+            status:
+              $ref: '#/components/schemas/QuizCategoryStatus'
+            healthHighlights:
+              type: array
+              items:
+                $ref: '#/components/schemas/HealthHighlight'
 
     MurmurStatus:
       type: string

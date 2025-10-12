@@ -1,6 +1,7 @@
 package com.york.doghealthtracker.controller;
 
 import com.york.doghealthtracker.api.DentalApi;
+import com.york.doghealthtracker.model.DentalListResponse;
 import com.york.doghealthtracker.model.DentalRequest;
 import com.york.doghealthtracker.model.DentalResponse;
 import com.york.doghealthtracker.service.DentalService;
@@ -26,10 +27,12 @@ public class DentalController implements DentalApi {
     }
 
     @Override
-    public ResponseEntity<List<DentalResponse>> getDentalRecords(String dogId) {
-        List<DentalResponse> dentalStatuses = dentalService.getDentalStatuses(dogId);
-        return ResponseEntity.ok(dentalStatuses);
+    public ResponseEntity<DentalListResponse> getDentalRecords(String dogId) {
+        DentalListResponse response = dentalService.getDentalListResponse(dogId);
+        return ResponseEntity.ok(response);
     }
+
+
 
     @Override
     public ResponseEntity<DentalResponse> getDentalById(String dogId, String dentalId) {

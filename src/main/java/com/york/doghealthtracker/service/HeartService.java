@@ -2,8 +2,7 @@ package com.york.doghealthtracker.service;
 
 import com.york.doghealthtracker.entity.DogEntity;
 import com.york.doghealthtracker.entity.HeartEntity;
-import com.york.doghealthtracker.model.HeartRequest;
-import com.york.doghealthtracker.model.HeartResponse;
+import com.york.doghealthtracker.model.*;
 import com.york.doghealthtracker.repository.DogRepository;
 import com.york.doghealthtracker.repository.HeartRepository;
 import org.openapitools.jackson.nullable.JsonNullable;
@@ -13,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -71,7 +71,86 @@ public class HeartService {
         return heartRepository.findByDog_Id(dogId)
                 .stream()
                 .map(this::toResponse)
+                .map(heartResponse -> heartResponse
+                        .status(calculateHeartStatus(heartResponse))
+                        .healthHighlights(addHealthHighlights(heartResponse))
+                )
                 .collect(Collectors.toList());
+    }
+
+    /**
+     * Calculates the health status (RED, GREEN or YELLOW) of the heart entity based on the values of its properties.
+     * Ignores a given property if null, sums all properties with data in the totalMetrics variable, and all properties
+     * with good health score in the healthyCount variable. Calculates an overall health status based on the ratio
+     * between the two values.
+     *
+     * @param heartResponse The heartResponse to analyze the status for.
+     * @return QuizCategoryStatus of color representing the status of the heart.
+     */
+    private QuizCategoryStatus calculateHeartStatus(HeartResponse heartResponse) {
+
+        int totalMetrics = 0; // how many of the properties of QuizCategoryStatus are not null
+        int healthyCount = 0; // how many of the properties of QuizCategoryStatus are considered "healthy"
+
+        if (heartResponse.getFatigue() != null) {
+            totalMetrics++;
+            if (!heartResponse.getFatigue()) {
+                healthyCount++;
+            }
+        }
+
+        if (heartResponse.getCoughing() != null) {
+            totalMetrics++;
+            if (!heartResponse.getCoughing()) {
+                healthyCount++;
+            }
+        }
+
+        if (heartResponse.getMurmurStatus() != null) {
+            totalMetrics++;
+            MurmurStatus murmur = heartResponse.getMurmurStatus();
+            if (murmur == MurmurStatus.NONE || murmur == MurmurStatus.GRADE_I) {
+                healthyCount++;
+            }
+        }
+
+        if (heartResponse.getHeartRate() != null) {
+            totalMetrics++;
+            float hr = heartResponse.getHeartRate().floatValue();
+            if (hr >= 60 && hr <= 120) {
+                healthyCount++;
+            }
+        }
+
+        if (heartResponse.getBreathingRate() != null) {
+            totalMetrics++;
+            float br = heartResponse.getBreathingRate().floatValue();
+            if (br >= 10 && br <= 35) {
+                healthyCount++;
+            }
+        }
+
+        if (totalMetrics == 0) {
+            return QuizCategoryStatus.YELLOW;
+        }
+
+        float ratio = (float) healthyCount / totalMetrics;
+
+        if (ratio >= 0.75f) {
+            return QuizCategoryStatus.GREEN;
+        } else if (ratio >= 0.40f) {
+            return QuizCategoryStatus.YELLOW;
+        } else {
+            return QuizCategoryStatus.RED;
+        }
+    }
+
+    private List<HealthHighlight> addHealthHighlights(HeartResponse heartResponse) {
+
+        // check sth
+        // check dirofilaria
+
+        return Collections.emptyList();
     }
 
     /**
