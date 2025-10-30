@@ -134,6 +134,37 @@ paths:
         '401':
           description: Unauthorized (invalid or missing token)
 
+  /users/{participant-id}/onboarding:
+    put:
+      summary: Update onboarding and consent status for a user
+      operationId: updateOnboardingAndConsent
+      tags:
+        - Users
+      parameters:
+        - name: participant-id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/ParticipantId'
+          description: The identifier of the participant.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OnboardingUpdateRequest'
+      responses:
+        '200':
+          description: Onboarding and consent status updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OnboardingUpdateResponse'
+        '404':
+          description: User not found
+        '401':
+          description: Unauthorized (invalid or missing token)
+
   /dogs:
     post:
       summary: Add a new dog
@@ -872,9 +903,17 @@ components:
           type: string
           format: email
           example: "user@example.com"
+        onboardingCompleted:
+          type: boolean
+          example: true
+        consentGranted:
+          type: boolean
+          example: true
       required:
         - participantId
         - email
+        - onboardingCompleted
+        - consentGranted
 
     UserUpdateRequest:
       type: object
@@ -905,6 +944,43 @@ components:
         advice:
           type: string
           example: Book a cardiologist.
+
+    OnboardingUpdateRequest:
+      type: object
+      description: Request to update onboarding and consent status.
+      properties:
+        onboardingCompleted:
+          type: boolean
+          example: true
+        consentGranted:
+          type: boolean
+          example: true
+      required:
+        - onboardingCompleted
+        - consentGranted
+
+    OnboardingUpdateResponse:
+      type: object
+      description: Response after updating onboarding and consent status.
+      properties:
+        participantId:
+          type: string
+          example: "1234"
+        onboardingCompleted:
+          type: boolean
+          example: true
+        consentGranted:
+          type: boolean
+          example: true
+        consentTimestamp:
+          type: string
+          format: date-time
+          example: "2025-10-29T20:45:00Z"
+      required:
+        - participantId
+        - onboardingCompleted
+        - consentGranted
+        - consentTimestamp
 
     # ======================
     # DOG COMPONENTS

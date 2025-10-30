@@ -1,11 +1,11 @@
 package com.york.doghealthtracker.service;
 
+import com.york.doghealthtracker.config.HighlightConfig;
 import com.york.doghealthtracker.entity.DogEntity;
 import com.york.doghealthtracker.entity.HeartEntity;
 import com.york.doghealthtracker.model.*;
 import com.york.doghealthtracker.repository.DogRepository;
 import com.york.doghealthtracker.repository.HeartRepository;
-import org.openapitools.jackson.nullable.JsonNullable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
@@ -26,10 +26,12 @@ import java.util.stream.Collectors;
 public class HeartService {
     private final HeartRepository heartRepository;
     private final DogRepository dogRepository;
+    private final HighlightConfig highlightConfig;
 
-    public HeartService(HeartRepository heartRepository, DogRepository dogRepository) {
+    public HeartService(HeartRepository heartRepository, DogRepository dogRepository, HighlightConfig highlightConfig) {
         this.heartRepository = heartRepository;
         this.dogRepository = dogRepository;
+        this.highlightConfig = highlightConfig;
     }
 
     /**
@@ -146,11 +148,63 @@ public class HeartService {
     }
 
     private List<HealthHighlight> addHealthHighlights(HeartResponse heartResponse) {
+        if (heartResponse == null) {
+            return Collections.emptyList();
+        }
 
-        // check sth
-        // check dirofilaria
+        List<HealthHighlight> highlights = new java.util.ArrayList<>();
+        QuizCategoryStatus status = calculateHeartStatus(heartResponse);
 
-        return Collections.emptyList();
+        if (Boolean.TRUE.equals(heartResponse.getFatigue())) {
+            highlights.add(constructHealthHighlight("fatigueDetected"));
+        }
+
+        if (Boolean.TRUE.equals(heartResponse.getCoughing())) {
+            highlights.add(constructHealthHighlight("coughingDetected"));
+        }
+
+        if (heartResponse.getMurmurStatus() != null) {
+            switch (heartResponse.getMurmurStatus()) {
+                case GRADE_II, GRADE_III -> highlights.add(constructHealthHighlight("murmurMidRisk"));
+                case GRADE_IV, GRADE_V, GRADE_VI -> highlights.add(constructHealthHighlight("murmurHighRisk"));
+                default -> {}
+            }
+        }
+
+        if (heartResponse.getHeartRate() != null) {
+            float hr = heartResponse.getHeartRate().floatValue();
+            if (hr < 60 || hr > 120) {
+                highlights.add(constructHealthHighlight("abnormalHeartRate"));
+            }
+        }
+
+        if (heartResponse.getBreathingRate() != null) {
+            float br = heartResponse.getBreathingRate().floatValue();
+            if (br < 10 || br > 35) {
+                highlights.add(constructHealthHighlight("abnormalBreathingRate"));
+            }
+        }
+
+        if (heartResponse.getLastDirofilariaPreventionDate() != null) {
+            LocalDateTime last = heartResponse.getLastDirofilariaPreventionDate().atStartOfDay();
+            if (last.isBefore(LocalDateTime.now().minusMonths(1))) {
+                highlights.add(constructHealthHighlight("dirofilariaDue"));
+            }
+        } else {
+            highlights.add(constructHealthHighlight("dirofilariaUnknown"));
+        }
+
+        switch (status) {
+            case RED -> highlights.add(constructHealthHighlight("heartHighRisk"));
+            case YELLOW -> highlights.add(constructHealthHighlight("heartMidRisk"));
+            case GREEN -> highlights.add(constructHealthHighlight("heartHealthy"));
+        }
+
+        return highlights;
+    }
+
+    private HealthHighlight constructHealthHighlight(String highlightType) {
+        return highlightConfig.getMap().get(highlightType);
     }
 
     /**

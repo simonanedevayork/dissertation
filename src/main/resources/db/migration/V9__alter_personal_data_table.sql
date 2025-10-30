@@ -1,6 +1,0 @@
-ALTER TABLE personal_data
-    ADD COLUMN PD_RESET_TOKEN VARCHAR(255),
-    ADD COLUMN PD_RESET_TOKEN_EXPIRATION TIMESTAMP;
-
-COMMENT ON COLUMN PERSONAL_DATA.PD_RESET_TOKEN IS 'The reset token used to reset user password.';
-COMMENT ON COLUMN PERSONAL_DATA.PD_RESET_TOKEN_EXPIRATION IS 'The reset token expiration used to validate token.';

@@ -1,9 +1,7 @@
 package com.york.doghealthtracker.service;
 
 import com.york.doghealthtracker.entity.UserEntity;
-import com.york.doghealthtracker.model.DashboardResponse;
-import com.york.doghealthtracker.model.UserResponse;
-import com.york.doghealthtracker.model.UserUpdateRequest;
+import com.york.doghealthtracker.model.*;
 import com.york.doghealthtracker.repository.UserRepository;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,6 +10,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.Optional;
 
 /**
@@ -39,7 +40,7 @@ public class UserService implements UserDetailsService {
      */
     public Optional<UserResponse> findUserById(String userId) {
         return userRepository.findById(userId)
-                .map(entity -> new UserResponse(entity.getId(), entity.getEmail()));
+                .map(entity -> new UserResponse(entity.getId(), entity.getEmail(), entity.getOnboardingCompleted(), entity.getConsentGranted()));
     }
 
     /**
@@ -54,7 +55,7 @@ public class UserService implements UserDetailsService {
             entity.setEmail(updateRequest.getEmail());
             entity.setPassword(passwordEncoder.encode(updateRequest.getPassword()));
             userRepository.save(entity);
-            return new UserResponse(entity.getId(), entity.getEmail());
+            return new UserResponse(entity.getId(), entity.getEmail(), entity.getOnboardingCompleted(), entity.getConsentGranted());
         });
     }
 
@@ -76,12 +77,33 @@ public class UserService implements UserDetailsService {
      * Retrieves user dashboard for given user.
      *
      * @param userId The id of the user to retrieve dashboard for.
-     * @param dogId The id of the dog related to the user.
+     * @param dogId  The id of the dog related to the user.
      * @return DashboardResponse object containing the user dashboard data.
      */
     public DashboardResponse getUserDashboard(String userId, String dogId) {
         log.info("Requesting dashboard information for user with id: {}", userId);
         return userDashboardService.getDashboard(userId, dogId);
+    }
+
+    public OnboardingUpdateResponse updateOnboardingAndConsent(String participantId, OnboardingUpdateRequest onboardingUpdateRequest) {
+        return userRepository.findById(participantId)
+                .map(user -> {
+                    user.setOnboardingCompleted(onboardingUpdateRequest.getOnboardingCompleted());
+                    user.setConsentGranted(onboardingUpdateRequest.getConsentGranted());
+                    user.setConsentTimestamp(Instant.now());
+                    userRepository.save(user);
+
+                    log.info("User {} updated onboardingCompleted={} and consentGranted={}",
+                            participantId, user.getOnboardingCompleted(), user.getConsentGranted());
+
+                    return new OnboardingUpdateResponse(
+                            user.getId(),
+                            user.getOnboardingCompleted(),
+                            user.getConsentGranted(),
+                            OffsetDateTime.ofInstant(user.getConsentTimestamp(), ZoneOffset.UTC)
+                    );
+                })
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with ID: " + participantId));
     }
 
     /**

@@ -97,8 +97,6 @@ public class AuthService {
         userRepository.save(user);
     }
 
-    //TODO: fix exceptions
-
     @Transactional
     public void sendPasswordResetEmail(String email) {
         UserEntity user = userRepository.findByEmail(email)

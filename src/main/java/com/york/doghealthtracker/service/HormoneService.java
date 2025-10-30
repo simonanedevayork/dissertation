@@ -4,7 +4,6 @@ import com.york.doghealthtracker.config.HighlightConfig;
 import com.york.doghealthtracker.config.HormoneQuizConfig;
 import com.york.doghealthtracker.entity.DogEntity;
 import com.york.doghealthtracker.entity.HormoneEntity;
-import com.york.doghealthtracker.exception.ResourceNotFoundException;
 import com.york.doghealthtracker.model.*;
 import com.york.doghealthtracker.repository.HormoneRepository;
 import com.york.doghealthtracker.service.utils.QuizScoreCalculationService;
@@ -14,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -124,6 +124,14 @@ public class HormoneService {
 
         HormoneStatusResponse response = new HormoneStatusResponse();
 
+        if (hormoneEntities.isEmpty()) {
+            response.setThyroid(null);
+            response.setAdrenal(null);
+            response.setPancreatic(null);
+            response.setHealthHighlights(getHormoneHealthHighlights(response));
+            return response;
+        }
+
         for (HormoneEntity entity : hormoneEntities) {
             switch (entity.getType()) {
                 case THYROID -> response.setThyroid(entity.getStatus());
@@ -140,6 +148,10 @@ public class HormoneService {
     private List<HealthHighlight> getHormoneHealthHighlights(HormoneStatusResponse response) {
 
         List<HealthHighlight> healthHighlights = new ArrayList<>();
+
+        if (response.getThyroid() == null || response.getPancreatic() == null || response.getAdrenal() == null) {
+            return Collections.emptyList();
+        }
 
         switch (response.getThyroid()) {
             case RED -> healthHighlights.add(constructHealthHighlight("thyroidHighRisk"));

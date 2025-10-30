@@ -3,6 +3,7 @@ package com.york.doghealthtracker.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+
 import java.time.Instant;
 
 @Entity
@@ -33,6 +34,15 @@ public class UserEntity {
 
     @Column(name = "pd_reset_token_expiration")
     private Instant resetTokenExpiration;
+
+    @Column(name = "pd_onboarding_completed")
+    private Boolean onboardingCompleted;
+
+    @Column(name = "pd_consent_granted")
+    private Boolean consentGranted;
+
+    @Column(name = "pd_consent_timestamp")
+    private Instant consentTimestamp;
 
     @PrePersist
     protected void onCreate() {

@@ -122,7 +122,7 @@ mobility:
 
 dog:
   goalWeightRanges:
-    Labrador Retriever:
+    Labrador:
       min: 25.0
       max: 36.0
     German Shepherd:
@@ -286,3 +286,65 @@ highlights:
       title: "Good Dental Health"
       description: "No signs of major dental issues were detected."
       advice: "Continue regular tooth brushing and schedule annual dental check-ups."
+
+    # --- Dashboard highlights ---
+    overweightRisk:
+      title: "Overweight detected"
+      description: "Overweight is a risk factor for hormonal imbalances, joint and mobility issues, and increased heart strain."
+      advice: "Consult your veterinarian to create a healthy weight management plan."
+
+    # --- Heart highlights ---
+    fatigueDetected:
+      title: "Fatigue Detected"
+      description: "Your dog shows signs of unusual tiredness or reduced activity."
+      advice: "Monitor closely and schedule a vet check if symptoms persist."
+
+    coughingDetected:
+      title: "Coughing Detected"
+      description: "Coughing can be an indicator of cardiac or respiratory issues."
+      advice: "Consult your veterinarian to rule out heart-related causes."
+
+    murmurMidRisk:
+      title: "Heart Murmur (Mild)"
+      description: "A mild murmur has been detected — may indicate early cardiac changes."
+      advice: "Monitor heart rate and schedule regular checkups."
+
+    murmurHighRisk:
+      title: "Severe Heart Murmur"
+      description: "A significant murmur was detected — can indicate heart disease."
+      advice: "Immediate veterinary consultation is strongly recommended."
+
+    abnormalHeartRate:
+      title: "Abnormal Heart Rate"
+      description: "Heart rate outside the normal 60–120 bpm range detected."
+      advice: "Monitor your dog’s behavior and consult your vet if symptoms persist."
+
+    abnormalBreathingRate:
+      title: "Abnormal Breathing Rate"
+      description: "Breathing rate outside the healthy range of 10–35 bpm detected."
+      advice: "Could indicate respiratory or cardiac issues — monitor and consult a vet."
+
+    dirofilariaDue:
+      title: "Dirofilaria Prevention Due"
+      description: "Heartworm prevention overdue for more than a month."
+      advice: "Administer the next preventive dose as soon as possible."
+
+    dirofilariaUnknown:
+      title: "Dirofilaria Prevention Date Missing"
+      description: "No prevention record found."
+      advice: "Ensure monthly prevention for heartworm disease is recorded."
+
+    heartHighRisk:
+      title: "High Heart Risk Detected"
+      description: "Multiple metrics indicate possible cardiac distress."
+      advice: "Visit your veterinarian immediately for diagnostic assessment."
+
+    heartMidRisk:
+      title: "Moderate Heart Risk"
+      description: "Some heart-related parameters are slightly outside the optimal range."
+      advice: "Monitor and recheck your dog’s cardiac health in the coming days."
+
+    heartHealthy:
+      title: "Healthy Heart Detected"
+      description: "Your dog’s cardiac health appears within optimal parameters."
+      advice: "Continue regular checkups and maintain preventive care."

@@ -33,8 +33,7 @@ public class WeightController implements WeightApi {
 
     @Override
     public ResponseEntity<Void> deleteWeight(String dogId, String weightId) {
-        boolean deleted = weightService.deleteWeight(dogId, weightId);
-        return deleted ? ResponseEntity.noContent().build()
-                : ResponseEntity.notFound().build();
+         weightService.deleteWeight(weightId);
+        return ResponseEntity.noContent().build();
     }
 }

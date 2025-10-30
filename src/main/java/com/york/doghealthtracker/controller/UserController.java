@@ -2,10 +2,7 @@ package com.york.doghealthtracker.controller;
 
 import com.york.doghealthtracker.api.UsersApi;
 import com.york.doghealthtracker.entity.DogEntity;
-import com.york.doghealthtracker.model.DashboardResponse;
-import com.york.doghealthtracker.model.DogResponse;
-import com.york.doghealthtracker.model.UserResponse;
-import com.york.doghealthtracker.model.UserUpdateRequest;
+import com.york.doghealthtracker.model.*;
 import com.york.doghealthtracker.service.DogService;
 import com.york.doghealthtracker.service.UserService;
 import com.york.doghealthtracker.service.security.UserContextService;
@@ -58,5 +55,10 @@ public class UserController implements UsersApi {
         DogEntity dog = userContextService.getDogInContext();
         DashboardResponse response = userService.getUserDashboard(participantId, dog.getId());
         return ResponseEntity.ok(response);
+    }
+
+    @Override
+    public ResponseEntity<OnboardingUpdateResponse> updateOnboardingAndConsent(String participantId, OnboardingUpdateRequest onboardingUpdateRequest) {
+        return ResponseEntity.ok(userService.updateOnboardingAndConsent(participantId, onboardingUpdateRequest));
     }
 }

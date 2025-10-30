@@ -70,11 +70,22 @@ public class WeightService {
             String breed = dogOpt.get().getBreed();
             Map<String, Float> range = getWeightRangeForBreed(breed);
 
-            return weightRepository.findByDogId(dogId).stream()
+            List<WeightEntity> weights = weightRepository.findByDogId(dogId);
+
+            if (weights == null || weights.isEmpty()) {
+                WeightResponse response = new WeightResponse()
+                        .current(null)
+                        .goalWeightRange(mapToGoalWeightRange(range))
+                        .status(null)
+                        .healthHighlights(Collections.emptyList());
+                return List.of(response);
+            }
+
+            return weights.stream()
                     .map(this::mapToResponse)
                     .map(weightResponse -> weightResponse
                             .goalWeightRange(mapToGoalWeightRange(range))
-                            .healthHighlights(addHealthHighlights(dogId)) //TODO: implement
+                            .healthHighlights(addHealthHighlights(dogId))
                     )
                     .map(weightResponse -> weightResponse
                             .status(calculateWeightStatus(weightResponse)))
@@ -86,6 +97,7 @@ public class WeightService {
 
     /**
      * Retrieves the weight range for a given breed from the application.yml configuration.
+     *
      * @param breed The dog breed to retrieve weight range for.
      * @return a Map of the min and max strings with their corresponding values.
      * @throws InvalidDogException if there is no such breed configured.
@@ -100,6 +112,7 @@ public class WeightService {
 
     /**
      * Maps the provided min and max weight range values to a GoalWeightRange object.
+     *
      * @param range The min and max range to map.
      * @return a GoalWeightRange object with corresponding min and max values.
      */
@@ -163,14 +176,8 @@ public class WeightService {
      * @return true if weight status was deleted successfully, false otherwise.
      */
     @PreAuthorize("@authorizationService.hasDogOwnership(#dogId) && @authorizationService.hasDentalStatusOwnership(#dogId, #dentalId)")
-    public boolean deleteWeight(String dogId, String weightId) {
-        return weightRepository.findById(weightId)
-                .filter(weight -> weight.getDog().getId().equals(dogId))
-                .map(weight -> {
-                    weightRepository.delete(weight);
-                    return true;
-                })
-                .orElse(false);
+    public void deleteWeight(String weightId) {
+        weightRepository.deleteById(weightId);
     }
 
     /**
