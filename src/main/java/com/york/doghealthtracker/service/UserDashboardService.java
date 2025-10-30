@@ -133,6 +133,8 @@ public class UserDashboardService {
 
         List<HealthHighlight> healthHighlights = new ArrayList<>();
 
+        healthHighlights.add(constructHealthHighlight("generalHealthHighlight"));
+
         List<WeightResponse> weights = weightService.getWeights(dogId);
 
         WeightResponse latestWeight = weights.stream()

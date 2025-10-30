@@ -196,155 +196,160 @@ highlights:
   map:
     # --- Hormone highlights ---
     thyroidHighRisk:
-      title: "Thyroid condition risk"
+      title: "🧬 Thyroid condition risk"
       description: "Your dog shows multiple symptoms of thyroid imbalance."
       advice: "Book a blood test to evaluate thyroid hormone levels."
 
     thyroidMidRisk:
-      title: "Possible thyroid imbalance"
+      title: "🧪 Possible thyroid imbalance"
       description: "Some mild thyroid-related symptoms observed."
       advice: "Monitor your dog’s behavior and repeat assessment later."
 
     adrenalHighRisk:
-      title: "Adrenal condition risk"
+      title: "⚠️ Adrenal condition risk"
       description: "Symptoms may indicate hormonal imbalance such as Cushing’s disease."
       advice: "Schedule an endocrine examination with your veterinarian."
 
     adrenalMidRisk:
-      title: "Possible adrenal imbalance"
+      title: "🧠 Possible adrenal imbalance"
       description: "Mild adrenal-related signs observed."
       advice: "Monitor water intake and activity, and reassess if symptoms persist."
 
     pancreaticHighRisk:
-      title: "Pancreatic condition risk"
+      title: "🍬 Pancreatic condition risk"
       description: "Possible irregularities in insulin or glucose regulation detected."
       advice: "Consult a vet for glucose and enzyme testing."
 
     pancreaticMidRisk:
-      title: "Possible pancreatic imbalance"
+      title: "🍽️ Possible pancreatic imbalance"
       description: "Some signs of pancreatic sensitivity detected."
       advice: "Watch your dog’s diet closely and consult a vet if digestion worsens."
 
     hormoneDefault:
-      title: "No hormonal abnormalities detected"
+      title: "🌿 No hormonal abnormalities detected"
       description: "Your dog’s hormonal indicators appear within normal range."
       advice: "Continue monitoring your dog’s behavior and appetite."
 
   # --- Mobility highlights ---
     luxationHighRisk:
-      title: "Patellar Luxation risk"
+      title: "🦵 Patellar Luxation risk"
       description: "Severe signs of knee joint instability detected."
       advice: "Consult a vet orthopedic specialist for evaluation and possible surgery."
 
     luxationMidRisk:
-      title: "Possible Patellar Luxation"
+      title: "🐕 Possible Patellar Luxation"
       description: "Mild knee joint instability or occasional limping noticed."
       advice: "Monitor your dog's gait and avoid overexertion."
 
     dysplasiaHighRisk:
-      title: "Hip Dysplasia risk"
+      title: "⚠️ Hip Dysplasia risk"
       description: "Strong indicators of hip joint deformation or chronic pain observed."
       advice: "Book an X-ray examination to assess joint health."
 
     dysplasiaMidRisk:
-      title: "Possible Hip Dysplasia"
+      title: "🦴 Possible Hip Dysplasia"
       description: "Some mobility issues or stiffness detected in hip area."
       advice: "Provide joint supplements and low-impact exercise."
 
     arthritisHighRisk:
-      title: "Arthritis risk"
+      title: "🔥 Arthritis risk"
       description: "Signs of severe joint inflammation and stiffness detected."
       advice: "Consult your veterinarian about pain management and therapy."
 
     arthritisMidRisk:
-      title: "Possible Arthritis"
+      title: "⚙️ Possible Arthritis"
       description: "Mild stiffness or discomfort in movement detected."
       advice: "Encourage gentle activity and consider dietary supplements."
 
     mobilityDefault:
-      title: "No mobility issues detected"
+      title: "🏃 No mobility issues detected"
       description: "Your dog’s mobility appears within healthy range."
       advice: "Maintain regular walks and balanced exercise routine."
 
     # --- Dental highlights ---
     toothLoss:
-      title: "Tooth Loss Detected"
+      title: "🦷 Tooth Loss Detected"
       description: "Tooth loss is a sign of dental disease and can indicate pain or infection."
       advice: "Book an appointment with your veterinarian to examine your dog’s oral health."
 
     overdueCleaning:
-      title: "Dental Cleaning Overdue"
+      title: "🪥 Dental Cleaning Overdue"
       description: "Your dog's last dental cleaning was over 12 months ago."
       advice: "Schedule a professional cleaning to prevent plaque buildup and gum disease."
 
     highPlaque:
-      title: "Plaque Buildup Detected"
+      title: "😬 Plaque Buildup Detected"
       description: "Plaque can destroy teeth and cause painful infections if untreated."
       advice: "Arrange a dental check-up with your vet to clean your dog’s teeth."
 
     dentalDefault:
-      title: "Good Dental Health"
+      title: "✨ Good Dental Health"
       description: "No signs of major dental issues were detected."
       advice: "Continue regular tooth brushing and schedule annual dental check-ups."
 
     # --- Dashboard highlights ---
     overweightRisk:
-      title: "Overweight detected"
+      title: "⚖️ Overweight detected"
       description: "Overweight is a risk factor for hormonal imbalances, joint and mobility issues, and increased heart strain."
       advice: "Consult your veterinarian to create a healthy weight management plan."
 
+    generalHealthHighlight:
+      title: "💡 Understand Your Dog’s Health Indicators"
+      description: "Health indicators reflect your dog’s overall wellbeing and play a vital role in early detection and prevention of potential health issues."
+      advice: "Monitor your dog’s data regularly to identify changes over time and take preventive actions."
+
     # --- Heart highlights ---
     fatigueDetected:
-      title: "Fatigue Detected"
+      title: "💤 Fatigue Detected"
       description: "Your dog shows signs of unusual tiredness or reduced activity."
       advice: "Monitor closely and schedule a vet check if symptoms persist."
 
     coughingDetected:
-      title: "Coughing Detected"
+      title: "🫁 Coughing Detected"
       description: "Coughing can be an indicator of cardiac or respiratory issues."
       advice: "Consult your veterinarian to rule out heart-related causes."
 
     murmurMidRisk:
-      title: "Heart Murmur (Mild)"
+      title: "💓 Heart Murmur (Mild)"
       description: "A mild murmur has been detected — may indicate early cardiac changes."
       advice: "Monitor heart rate and schedule regular checkups."
 
     murmurHighRisk:
-      title: "Severe Heart Murmur"
+      title: "❤️‍ Severe Heart Murmur"
       description: "A significant murmur was detected — can indicate heart disease."
       advice: "Immediate veterinary consultation is strongly recommended."
 
     abnormalHeartRate:
-      title: "Abnormal Heart Rate"
+      title: "💗 Abnormal Heart Rate"
       description: "Heart rate outside the normal 60–120 bpm range detected."
       advice: "Monitor your dog’s behavior and consult your vet if symptoms persist."
 
     abnormalBreathingRate:
-      title: "Abnormal Breathing Rate"
+      title: "🌬️ Abnormal Breathing Rate"
       description: "Breathing rate outside the healthy range of 10–35 bpm detected."
       advice: "Could indicate respiratory or cardiac issues — monitor and consult a vet."
 
     dirofilariaDue:
-      title: "Dirofilaria Prevention Due"
+      title: "🦟 Dirofilaria Prevention Due"
       description: "Heartworm prevention overdue for more than a month."
       advice: "Administer the next preventive dose as soon as possible."
 
     dirofilariaUnknown:
-      title: "Dirofilaria Prevention Date Missing"
+      title: "❓ Dirofilaria Prevention Date Missing"
       description: "No prevention record found."
       advice: "Ensure monthly prevention for heartworm disease is recorded."
 
     heartHighRisk:
-      title: "High Heart Risk Detected"
+      title: "❤️ High Heart Risk Detected"
       description: "Multiple metrics indicate possible cardiac distress."
       advice: "Visit your veterinarian immediately for diagnostic assessment."
 
     heartMidRisk:
-      title: "Moderate Heart Risk"
+      title: "❤️ Moderate Heart Risk"
       description: "Some heart-related parameters are slightly outside the optimal range."
       advice: "Monitor and recheck your dog’s cardiac health in the coming days."
 
     heartHealthy:
-      title: "Healthy Heart Detected"
+      title: "💚 Healthy Heart Detected"
       description: "Your dog’s cardiac health appears within optimal parameters."
       advice: "Continue regular checkups and maintain preventive care."

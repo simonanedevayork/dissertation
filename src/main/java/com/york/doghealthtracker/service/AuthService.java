@@ -25,6 +25,8 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import static com.york.doghealthtracker.service.utils.EmailSenderUtils.*;
+
 /**
  * Service responsible for the authentication and authorization logic for the application.
  * Authentication is accomplished through validating user credentials against user data in the database; generating,
@@ -103,16 +105,16 @@ public class AuthService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
 
         String token = UUID.randomUUID().toString();
-        Instant expiry = Instant.now().plusSeconds(900); // 15 min
+        Instant expiry = Instant.now().plusSeconds(PASSWORD_RESET_EXPIRY_SECONDS);
 
         user.setResetToken(token);
         user.setResetTokenExpiration(expiry);
         userRepository.save(user);
 
-        String resetLink = "http://localhost:5173/reset-password?token=" + token;
-        String message = "Click the following link to reset your password:\n\n" + resetLink;
+        String resetLink = RESET_LINK_URL + token;
+        String message = EMAIL_MESSAGE.formatted(resetLink, resetLink, resetLink);
 
-        emailService.sendEmail(user.getEmail(), "Password Reset Request", message);
+        emailService.sendEmail(user.getEmail(), PASSWORD_RESET_EMAIL_SUBJECT, message, true);
         log.info("Password reset link sent to {}", email);
     }
 
